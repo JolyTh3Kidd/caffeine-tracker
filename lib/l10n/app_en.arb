@@ -1,0 +1,12 @@
+{
+    "appName": "Caffeine Tracker",
+    "today": "Today",
+    "addDrink": "Add drink",
+    "confirmAdd": "Add {drink}?",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "limitExceeded": "Daily caffeine limit exceeded",
+    "customDrinks": "Custom drinks",
+    "addCustom": "Add custom drink",
+    "history": "History"
+}
