@@ -4,71 +4,102 @@ class DrinkCard extends StatelessWidget {
   final String name;
   final int caffeine;
   final VoidCallback onAdd;
+  final VoidCallback? onEdit;
 
-  const DrinkCard({super.key, required this.name, required this.caffeine, required this.onAdd});
+  const DrinkCard({
+    super.key,
+    required this.name,
+    required this.caffeine,
+    required this.onAdd,
+    this.onEdit,
+  });
 
-  static List<Widget> predefined(Function(int) onAdd) => [
-        DrinkCard(name: 'Espresso', caffeine: 63, onAdd: () => onAdd(63)),
-        DrinkCard(name: 'Cappuccino', caffeine: 75, onAdd: () => onAdd(75)),
-        DrinkCard(name: 'Latte', caffeine: 75, onAdd: () => onAdd(75)),
-        DrinkCard(name: 'Americano', caffeine: 95, onAdd: () => onAdd(95)),
-        DrinkCard(name: 'Filter', caffeine: 120, onAdd: () => onAdd(120)),
-        DrinkCard(name: 'Instant', caffeine: 60, onAdd: () => onAdd(60)),
-      ];
+  static List<Widget> predefined(
+    Function(int, {String drinkName}) onAdd,
+    Function(String, String, int)? onEdit,
+  ) {
+    final drinks = [
+      ('espresso', 'Espresso', 63),
+      ('cappuccino', 'Cappuccino', 75),
+      ('latte', 'Latte', 75),
+      ('americano', 'Americano', 95),
+      ('filter', 'Filter', 120),
+      ('instant', 'Instant', 60),
+    ];
+
+    return drinks.map((drink) {
+      return DrinkCard(
+        name: drink.$2,
+        caffeine: drink.$3,
+        onAdd: () => onAdd(drink.$3, drinkName: drink.$2),
+        onEdit: onEdit != null ? () => onEdit(drink.$1, drink.$2, drink.$3) : null,
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Hero(
-      tag: name,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: (isDark ? Colors.black : Colors.black).withOpacity(0.1),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+    return GestureDetector(
+      onTap: onEdit,
+      child: Hero(
+        tag: name,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isDark
+                    ? const Color(0xFF2A2A2A)
+                    : const Color(0xFFEEEEEE),
+                width: 1,
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '$caffeine mg',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: isDark
+                              ? Colors.grey[400]
+                              : Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '$caffeine mg',
-                    style: TextStyle(
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.add_circle,
-                  color: Theme.of(context).primaryColor,
-                  size: 32,
                 ),
-                onPressed: onAdd,
-              ),
-            ],
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isDark
+                        ? const Color(0xFF2A2A2A)
+                        : const Color(0xFFF5F5F5),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.add_rounded, size: 20),
+                    color: const Color(0xFF6F4E37),
+                    onPressed: onAdd,
+                    splashRadius: 20,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

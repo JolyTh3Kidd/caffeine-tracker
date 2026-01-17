@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'services/storage_service.dart';
@@ -29,66 +28,74 @@ class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
       themeMode: _themeMode,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.brown,
+        colorSchemeSeed: const Color(0xFF6F4E37),
         brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFF6F7FB),
+        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+        appBarTheme: const AppBarThemeData(
+          backgroundColor: Color(0xFFFAFAFA),
+          foregroundColor: Colors.black87,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+        ),
         cardTheme: CardThemeData(
           elevation: 0,
+          color: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.brown[600],
+            backgroundColor: const Color(0xFF6F4E37),
             foregroundColor: Colors.white,
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+            textStyle: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.brown[600],
+            foregroundColor: const Color(0xFF6F4E37),
           ),
-        ),
-        appBarTheme: const AppBarThemeData(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 0,
         ),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.brown[400],
+        colorSchemeSeed: const Color(0xFF6F4E37),
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        appBarTheme: const AppBarThemeData(
+          backgroundColor: Color(0xFF121212),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+        ),
         cardTheme: CardThemeData(
           elevation: 0,
+          color: const Color(0xFF1E1E1E),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.brown[400],
+            backgroundColor: const Color(0xFF6F4E37),
             foregroundColor: Colors.white,
+            elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+            textStyle: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.brown[400],
+            foregroundColor: const Color(0xFF6F4E37),
           ),
-        ),
-        appBarTheme: const AppBarThemeData(
-          backgroundColor: Color(0xFF2A2A2A),
-          foregroundColor: Colors.white,
-          elevation: 0,
         ),
       ),
       supportedLocales: const [

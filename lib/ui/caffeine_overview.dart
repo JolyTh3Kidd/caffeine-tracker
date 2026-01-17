@@ -14,58 +14,152 @@ class CaffeineOverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = (total / limit).clamp(0.0, 1.5);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final exceeded = total > limit;
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
-        gradient: LinearGradient(
-          colors: isDark
-              ? [const Color(0xFF2A2A3E), const Color(0xFF1F1F2E)]
-              : [const Color(0xFF2AFADF), const Color.fromARGB(255, 251, 251, 251)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        borderRadius: BorderRadius.circular(20),
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        border: Border.all(
+          color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFEEEEEE),
+          width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: (isDark ? const Color.fromARGB(255, 32, 32, 32) : const Color(0xFF2AFADF))
-                .withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
       child: Column(
         children: [
           TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: percent),
-            duration: const Duration(milliseconds: 700),
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeOutCubic,
             builder: (_, value, __) => SizedBox(
-              height: 160,
-              width: 160,
-              child: CircularProgressIndicator(
-                value: value > 1 ? 1 : value,
-                strokeWidth: 14,
-                backgroundColor: Colors.white.withOpacity(0.2),
-                color: Colors.white,
+              height: 140,
+              width: 140,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Custom progress ring with better styling
+                  SizedBox(
+                    height: 140,
+                    width: 140,
+                    child: CustomPaint(
+                      painter: _ProgressRingPainter(
+                        progress: value > 1 ? 1 : value,
+                        backgroundColor: isDark
+                            ? const Color(0xFF2A2A2A)
+                            : const Color(0xFFF0F0F0),
+                        foregroundColor: exceeded
+                            ? Colors.red[400]!
+                            : const Color(0xFF6F4E37),
+                        strokeWidth: 6,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '$total',
+                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        'mg',
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: isDark
+                              ? Colors.grey[400]
+                              : Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            '$total mg',
-            style: Theme.of(context)
-                .textTheme
-                .headlineLarge
-                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'of $limit mg',
-            style: TextStyle(color: Colors.white.withOpacity(0.8)),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFFAFAFA),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Daily Limit',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '$limit mg',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _ProgressRingPainter extends CustomPainter {
+  final double progress;
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final double strokeWidth;
+
+  _ProgressRingPainter({
+    required this.progress,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+
+    // Draw background circle
+    final backgroundPaint = Paint()
+      ..color = backgroundColor
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    // Draw progress arc
+    final foregroundPaint = Paint()
+      ..color = foregroundColor
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    final sweepAngle = (progress * 2 * 3.14159265359);
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -3.14159265359 / 2, // Start from top
+      sweepAngle,
+      false,
+      foregroundPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ProgressRingPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.foregroundColor != foregroundColor ||
+        oldDelegate.backgroundColor != backgroundColor;
   }
 }

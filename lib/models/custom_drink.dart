@@ -9,6 +9,18 @@ class CustomDrink {
     required this.caffeine,
   });
 
+  CustomDrink copyWith({
+    String? id,
+    String? name,
+    int? caffeine,
+  }) {
+    return CustomDrink(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      caffeine: caffeine ?? this.caffeine,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,

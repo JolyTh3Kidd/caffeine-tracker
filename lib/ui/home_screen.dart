@@ -7,6 +7,8 @@ import '../ui/caffeine_overview.dart';
 import '../l10n/app_localizations.dart';
 import '../models/custom_drink.dart';
 import 'add_custom_drink_screen.dart';
+import 'edit_drink_screen.dart';
+import 'history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
@@ -27,10 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
     customDrinks = StorageService.customDrinksList;
   }
 
-  void _add(int mg) {
+  void _add(int mg, {String drinkName = 'Unknown'}) {
     HapticFeedback.mediumImpact();
     setState(() {
-      StorageService.addCaffeine(mg);
+      StorageService.addCaffeine(mg, drinkName: drinkName);
       total = StorageService.todayCaffeine;
     });
   }
@@ -72,6 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           CupertinoButton(
             padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: const Icon(CupertinoIcons.calendar),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const HistoryScreen(),
+              ),
+            ),
+          ),
+          CupertinoButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: const Icon(CupertinoIcons.settings),
             onPressed: () => _showSettings(context),
           ),
@@ -85,7 +97,34 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 16),
                 children: [
-                  ...DrinkCard.predefined(_add),
+                  ...DrinkCard.predefined(
+                    _add,
+                    (id, name, caffeine) {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => EditDrinkScreen(
+                            drinkId: id,
+                            initialName: name,
+                            initialCaffeine: caffeine,
+                            isPredefined: true,
+                            onSave: () {
+                              setState(() {});
+                            },
+                          ),
+                          transitionsBuilder: (_, animation, __, child) {
+                            return SlideTransition(
+                              position: Tween(
+                                begin: const Offset(0, 1),
+                                end: Offset.zero,
+                              ).animate(animation),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   if (customDrinks.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -96,38 +135,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ...customDrinks.map(
-                    (drink) => GestureDetector(
-                      onLongPress: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text('Delete Drink?'),
-                            content: Text('Remove "${drink.name}"?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  StorageService.removeCustomDrink(drink.id);
-                                  setState(() {
-                                    customDrinks =
-                                        StorageService.customDrinksList;
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Delete'),
-                              ),
-                            ],
+                    (drink) => DrinkCard(
+                      name: drink.name,
+                      caffeine: drink.caffeine,
+                      onAdd: () => _add(drink.caffeine, drinkName: drink.name),
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => EditDrinkScreen(
+                              drinkId: drink.id,
+                              initialName: drink.name,
+                              initialCaffeine: drink.caffeine,
+                              isPredefined: false,
+                              onSave: () {
+                                setState(() {
+                                  customDrinks =
+                                      StorageService.customDrinksList;
+                                });
+                              },
+                            ),
+                            transitionsBuilder: (_, animation, __, child) {
+                              return SlideTransition(
+                                position: Tween(
+                                  begin: const Offset(0, 1),
+                                  end: Offset.zero,
+                                ).animate(animation),
+                                child: child,
+                              );
+                            },
                           ),
                         );
                       },
-                      child: DrinkCard(
-                        name: drink.name,
-                        caffeine: drink.caffeine,
-                        onAdd: () => _add(drink.caffeine),
-                      ),
                     ),
                   ),
                   Padding(

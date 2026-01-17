@@ -1,15 +1,369 @@
 import 'package:flutter/material.dart';
+import '../services/storage_service.dart';
+import '../models/drink_entry.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
   @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  late Map<String, int> history;
+  int caffeineLimit = StorageService.caffeineLimit;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  void _loadHistory() {
+    setState(() {
+      history = StorageService.getCaffeineHistory();
+      caffeineLimit = StorageService.caffeineLimit;
+    });
+  }
+
+  List<MapEntry<String, int>> _getSortedHistory() {
+    final entries = history.entries.toList();
+    entries.sort((a, b) => b.key.compareTo(a.key)); // Sort by date descending
+    return entries;
+  }
+
+  String _formatDateKey(String key) {
+    // key format: 'caffeine_YYYY_MM_DD'
+    final parts = key.split('_');
+    if (parts.length == 4) {
+      final year = parts[1];
+      final month = parts[2].padLeft(2, '0');
+      final day = parts[3].padLeft(2, '0');
+      return '$day/$month/$year';
+    }
+    return key;
+  }
+
+  DateTime? _parseDate(String key) {
+    final parts = key.split('_');
+    if (parts.length == 4) {
+      try {
+        return DateTime(
+          int.parse(parts[1]),
+          int.parse(parts[2]),
+          int.parse(parts[3]),
+        );
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  String _getDayName(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final dateOnly = DateTime(date.year, date.month, date.day);
+
+    if (dateOnly == today) {
+      return 'Today';
+    } else if (dateOnly == yesterday) {
+      return 'Yesterday';
+    }
+
+    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days[date.weekday - 1];
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final sortedHistory = _getSortedHistory();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('History')),
-      body: const Center(
-        child: Text('Daily caffeine history (chart/calendar)'),
+      appBar: AppBar(
+        title: const Text('Caffeine History'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
+      body: sortedHistory.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.history, size: 64, color: Colors.grey[400]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No history yet',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Start tracking your caffeine intake',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: sortedHistory.length,
+              itemBuilder: (context, index) {
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+                final entry = sortedHistory[index];
+                final caffeine = entry.value;
+                final date = _parseDate(entry.key);
+                final dateStr = _formatDateKey(entry.key);
+                final dayName = date != null ? _getDayName(date) : '';
+                final exceeded = caffeine > caffeineLimit;
+                final progress =
+                    (caffeine / caffeineLimit).clamp(0.0, 1.5);
+
+                // Get drink entries for this date
+                final drinkEntries = date != null
+                    ? StorageService.getDrinkEntriesForDate(date)
+                    : <DrinkEntry>[];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF2A2A2A)
+                            : const Color(0xFFEEEEEE),
+                        width: 1,
+                      ),
+                    ),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                      ),
+                      child: ExpansionTile(
+                        tilePadding: const EdgeInsets.all(16),
+                        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        title: Row(
+                          children: [
+                            // Progress ring
+                            SizedBox(
+                              width: 70,
+                              height: 70,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: CircularProgressIndicator(
+                                      value: progress,
+                                      strokeWidth: 5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        exceeded
+                                            ? Colors.red[400]!
+                                            : const Color(0xFF6F4E37),
+                                      ),
+                                      backgroundColor: isDark
+                                          ? const Color(0xFF2A2A2A)
+                                          : const Color(0xFFF0F0F0),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$caffeine',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                      Text(
+                                        'mg',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            // Date and status info
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    dayName,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                  Text(
+                                    dateStr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          color: isDark
+                                              ? Colors.grey[400]
+                                              : Colors.grey[600],
+                                        ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  if (exceeded)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(6),
+                                        color: Colors.red[50],
+                                      ),
+                                      child: Text(
+                                        'Over by ${caffeine - caffeineLimit} mg',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.red[600],
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(6),
+                                        color: Colors.green[50],
+                                      ),
+                                      child: Text(
+                                        'Within limit',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.green[700],
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        children: [
+                          Divider(
+                            color: isDark
+                                ? const Color(0xFF2A2A2A)
+                                : const Color(0xFFEEEEEE),
+                            height: 1,
+                            indent: 0,
+                            endIndent: 0,
+                          ),
+                          const SizedBox(height: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Drinks Consumed',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 12),
+                              if (drinkEntries.isEmpty)
+                                Text(
+                                  'No drink records',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: isDark
+                                            ? Colors.grey[400]
+                                            : Colors.grey[600],
+                                      ),
+                                )
+                              else
+                                ...drinkEntries.map((entry) {
+                                  final time = entry.timestamp;
+                                  final timeStr =
+                                      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              entry.name,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w500,
+                                                  ),
+                                            ),
+                                            Text(
+                                              timeStr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelSmall
+                                                  ?.copyWith(
+                                                    color: isDark
+                                                        ? Colors.grey[400]
+                                                        : Colors.grey[600],
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          '${entry.caffeine} mg',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: const Color(0xFF6F4E37),
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }

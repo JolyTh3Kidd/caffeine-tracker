@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/custom_drink.dart';
 import '../services/storage_service.dart';
 
-class AddCustomDrinkScreen extends StatefulWidget {
-  final Function(CustomDrink) onSave;
+class EditDrinkScreen extends StatefulWidget {
+  final String drinkId;
+  final String initialName;
+  final int initialCaffeine;
+  final bool isPredefined;
+  final Function() onSave;
 
-  const AddCustomDrinkScreen({super.key, required this.onSave});
+  const EditDrinkScreen({
+    super.key,
+    required this.drinkId,
+    required this.initialName,
+    required this.initialCaffeine,
+    required this.isPredefined,
+    required this.onSave,
+  });
 
   @override
-  State<AddCustomDrinkScreen> createState() => _AddCustomDrinkScreenState();
+  State<EditDrinkScreen> createState() => _EditDrinkScreenState();
 }
 
-class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
+class _EditDrinkScreenState extends State<EditDrinkScreen>
     with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _caffeineController;
@@ -23,8 +33,8 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _caffeineController = TextEditingController();
+    _nameController = TextEditingController(text: widget.initialName);
+    _caffeineController = TextEditingController(text: widget.initialCaffeine.toString());
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
@@ -66,15 +76,59 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
 
     HapticFeedback.mediumImpact();
 
-    final drink = CustomDrink(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nameController.text,
-      caffeine: int.parse(_caffeineController.text),
-    );
+    if (widget.isPredefined) {
+      StorageService.updatePredefinedDrink(
+        widget.drinkId,
+        _nameController.text,
+        int.parse(_caffeineController.text),
+      );
+      // Also restore if it was deleted
+      StorageService.restorePredefinedDrink(widget.drinkId);
+    } else {
+      StorageService.updateCustomDrink(
+        StorageService.customDrinksList.firstWhere(
+          (d) => d.id == widget.drinkId,
+        ).copyWith(
+          name: _nameController.text,
+          caffeine: int.parse(_caffeineController.text),
+        ),
+      );
+    }
 
-    StorageService.addCustomDrink(drink);
-    widget.onSave(drink);
+    widget.onSave();
     Navigator.pop(context);
+  }
+
+  void _deleteDrink() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Drink?'),
+        content: Text('Are you sure you want to delete "${widget.initialName}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              HapticFeedback.mediumImpact();
+              if (widget.isPredefined) {
+                StorageService.deletePredefinedDrink(widget.drinkId);
+              } else {
+                StorageService.removeCustomDrink(widget.drinkId);
+              }
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red[600]),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -84,10 +138,17 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Add Custom Drink'),
+        title: Text(widget.isPredefined ? 'Edit Drink' : 'Edit Drink'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red[600]),
+            onPressed: _deleteDrink,
+            tooltip: 'Delete drink',
+          ),
+        ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -179,7 +240,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                             Icon(Icons.check_circle, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              'Save Drink',
+                              'Save Changes',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
