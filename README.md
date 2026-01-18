@@ -2,20 +2,20 @@
 
 A Flutter project designed to track daily caffeine limit.
 
-# Features
-## Caffeine Tracking
+## Features
+### Caffeine Tracking
 
 - Track daily caffeine intake (mg)
 - One-tap add from predefined drinks
 
-## Visual Dashboard
+### Visual Dashboard
 
 - Circular progress indicator
 - Clear visibility of consumed caffeine and personal daily limit
 - Color-coded states
 - Animated warning banner when limit is exceeded
 
-## Predefined Drinks
+### Predefined Drinks
 
 | Drink               | Size   | Caffeine |
 | ------------------- | ------ | -------- |
@@ -36,8 +36,17 @@ A Flutter project designed to track daily caffeine limit.
 - 🇪🇸Spanish
 
 ## Getting Started
+
+### Prerequisites
+
+- Flutter SDK ≥ 3.2
+- Dart ≥ 3.0
+
+### Installation
+
+```shell
 git clone https://github.com/yourusername/caffeine-tracker.git
 cd caffeine-tracker
 flutter pub get
 flutter run
-
+```
