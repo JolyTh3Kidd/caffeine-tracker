@@ -34,3 +34,10 @@ A Flutter project designed to track daily caffeine limit.
 - 🇻🇳Vietnamese
 - 🇨🇳Chinese
 - 🇪🇸Spanish
+
+## Getting Started
+git clone https://github.com/yourusername/caffeine-tracker.git
+cd caffeine-tracker
+flutter pub get
+flutter run
+
