@@ -1,16 +1,36 @@
-# caffeine_tracker
+# Caffeine Tracker
 
-A new Flutter project.
+A Flutter project designed to track daily caffeine limit.
 
-## Getting Started
+# Features
+## Caffeine Tracking
 
-This project is a starting point for a Flutter application.
+- Track daily caffeine intake (mg)
+- One-tap add from predefined drinks
 
-A few resources to get you started if this is your first Flutter project:
+## Visual Dashboard
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Circular progress indicator
+- Clear visibility of consumed caffeine and personal daily limit
+- Color-coded states
+- Animated warning banner when limit is exceeded
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Predefined Drinks
+
+| Drink               | Size   | Caffeine |
+| ------------------- | ------ | -------- |
+| Espresso            | 30 ml  | 63 mg    |
+| Cappuccino          | 250 ml | 75 mg    |
+| Latte               | 250 ml | 75 mg    |
+| Americano           | 250 ml | 95 mg    |
+| Filter / Batch Brew | 250 ml | 120 mg   |
+| Instant Coffee      | 250 ml | 60 mg    |
+
+
+## Localization
+
+- 🇺🇸English
+- 🇰🇿Kazakh
+- 🇻🇳Vietnamese
+- 🇨🇳Chinese
+- 🇪🇸Spanish
