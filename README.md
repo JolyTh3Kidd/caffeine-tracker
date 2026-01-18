@@ -2,6 +2,22 @@
 
 A Flutter project designed to track daily caffeine limit.
 
+## Getting Started
+
+### Prerequisites
+
+- Flutter SDK ≥ 3.2
+- Dart ≥ 3.0
+
+### Installation
+
+```shell
+git clone https://github.com/yourusername/caffeine-tracker.git
+cd caffeine-tracker
+flutter pub get
+flutter run
+```
+
 ## Features
 ### Caffeine Tracking
 
@@ -34,19 +50,3 @@ A Flutter project designed to track daily caffeine limit.
 - 🇻🇳Vietnamese
 - 🇨🇳Chinese
 - 🇪🇸Spanish
-
-## Getting Started
-
-### Prerequisites
-
-- Flutter SDK ≥ 3.2
-- Dart ≥ 3.0
-
-### Installation
-
-```shell
-git clone https://github.com/yourusername/caffeine-tracker.git
-cd caffeine-tracker
-flutter pub get
-flutter run
-```
