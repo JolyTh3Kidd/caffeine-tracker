@@ -26,6 +26,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
+  // --- NEW METHOD START ---
+  Future<void> _confirmDelete(DateTime date, DrinkEntry entry) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Entry'),
+        content: Text('Remove ${entry.name} (${entry.caffeine} mg) from history?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await StorageService.deleteDrink(date, entry);
+      _loadHistory();
+    }
+  }
+  // --- NEW METHOD END ---
+
   List<MapEntry<String, int>> _getSortedHistory() {
     final entries = history.entries.toList();
     entries.sort((a, b) => b.key.compareTo(a.key)); // Sort by date descending
@@ -314,47 +342,69 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                entry.name,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                              ),
+                                              Text(
+                                                timeStr,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall
+                                                    ?.copyWith(
+                                                      color: isDark
+                                                          ? Colors.grey[400]
+                                                          : Colors.grey[600],
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
                                           children: [
                                             Text(
-                                              entry.name,
+                                              '${entry.caffeine} mg',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodySmall
                                                   ?.copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w500,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: const Color(0xFF6F4E37),
                                                   ),
                                             ),
-                                            Text(
-                                              timeStr,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall
-                                                  ?.copyWith(
-                                                    color: isDark
-                                                        ? Colors.grey[400]
-                                                        : Colors.grey[600],
+                                            const SizedBox(width: 8),
+                                            // --- NEW DELETE BUTTON ---
+                                            if (date != null)
+                                              SizedBox(
+                                                width: 32,
+                                                height: 32,
+                                                child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  icon: Icon(
+                                                    Icons.delete_outline, 
+                                                    size: 18,
+                                                    color: isDark ? Colors.grey[500] : Colors.grey[400],
                                                   ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          '${entry.caffeine} mg',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: const Color(0xFF6F4E37),
+                                                  onPressed: () => _confirmDelete(date, entry),
+                                                ),
                                               ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   );
-                                }).toList(),
+                                }),
                             ],
                           ),
                         ],
