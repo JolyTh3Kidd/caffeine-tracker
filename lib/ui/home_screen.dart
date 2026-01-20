@@ -12,7 +12,8 @@ import 'history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
-  const HomeScreen({super.key, required this.onThemeChanged});
+  final Function(Locale) onLocaleChanged;
+  const HomeScreen({super.key, required this.onThemeChanged, required this.onLocaleChanged});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -61,6 +62,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showLanguageBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.of(context)?.language ?? 'Choose Language',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            _buildLanguageOption('🇺🇸 English', 'en'),
+            _buildLanguageOption('🇰🇿 Қазақша', 'kk'),
+            _buildLanguageOption('🇻🇳 Tiếng Việt', 'vi'),
+            _buildLanguageOption('🇨🇳 中文', 'zh'),
+            _buildLanguageOption('🇪🇸 Español', 'es'),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageOption(String label, String code) {
+    return ListTile(
+      leading: const Icon(Icons.language),
+      title: Text(label),
+      onTap: () {
+        widget.onLocaleChanged(Locale(code));
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -68,10 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(l.appName),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: _showLanguageBottomSheet,
+          ),
           CupertinoButton(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: const Icon(CupertinoIcons.calendar),
@@ -174,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _openAddCustomDrink,
                       icon: const Icon(Icons.add),
-                      label: const Text('Add Custom Drink'),
+                      label: Text(AppLocalizations.of(context)?.addCustom ?? 'Add Custom Drink'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(

@@ -19,6 +19,7 @@ class CaffeineTrackerApp extends StatefulWidget {
 
 class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
   ThemeMode _themeMode = ThemeMode.system;
+  Locale? _locale;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
       debugShowCheckedModeBanner: false,
       title: 'Caffeine Tracker',
       themeMode: _themeMode,
+      locale: _locale, // Apply the selected locale
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF6F4E37),
@@ -99,11 +101,11 @@ class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
         ),
       ),
       supportedLocales: const [
-        Locale('en'),
-        Locale('kk'),
-        Locale('vi'),
-        Locale('zh'),
-        Locale('es'),
+        Locale('en'), // English
+        Locale('kk'), // Kazakh
+        Locale('vi'), // Vietnamese
+        Locale('zh'), // Chinese
+        Locale('es'), // Spanish
       ],
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -113,6 +115,8 @@ class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
       ],
       home: HomeScreen(
         onThemeChanged: (mode) => setState(() => _themeMode = mode),
+        // Pass this callback to HomeScreen so the user can change language from Settings
+        onLocaleChanged: (locale) => setState(() => _locale = locale),
       ),
     );
   }

@@ -62,7 +62,11 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
   }
 
   void _saveDrink() {
-    if (_nameController.text.isEmpty || _caffeineController.text.isEmpty) {
+    final name = _nameController.text.trim();
+    final caffeineStr = _caffeineController.text.trim();
+
+    // 1. Validate Empty Fields
+    if (name.isEmpty || caffeineStr.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Please fill all fields'),
@@ -74,29 +78,60 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
       return;
     }
 
+    // 2. Validate Caffeine is a Number
+    final caffeine = int.tryParse(caffeineStr);
+    if (caffeine == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter a valid number for caffeine'),
+          backgroundColor: Colors.red[600],
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+      return;
+    }
+
     HapticFeedback.mediumImpact();
 
-    if (widget.isPredefined) {
-      StorageService.updatePredefinedDrink(
-        widget.drinkId,
-        _nameController.text,
-        int.parse(_caffeineController.text),
-      );
-      // Also restore if it was deleted
-      StorageService.restorePredefinedDrink(widget.drinkId);
-    } else {
-      StorageService.updateCustomDrink(
-        StorageService.customDrinksList.firstWhere(
-          (d) => d.id == widget.drinkId,
-        ).copyWith(
-          name: _nameController.text,
-          caffeine: int.parse(_caffeineController.text),
+    try {
+      if (widget.isPredefined) {
+        StorageService.updatePredefinedDrink(
+          widget.drinkId,
+          name,
+          caffeine,
+        );
+        // Also restore if it was deleted
+        StorageService.restorePredefinedDrink(widget.drinkId);
+      } else {
+        // Safe Custom Drink Update
+        final customDrinks = StorageService.customDrinksList;
+        
+        // Ensure we can find the drink before trying to update it
+        final drinkIndex = customDrinks.indexWhere((d) => d.id == widget.drinkId);
+        
+        if (drinkIndex != -1) {
+          final existingDrink = customDrinks[drinkIndex];
+          final updatedDrink = existingDrink.copyWith(
+            name: name,
+            caffeine: caffeine,
+          );
+          StorageService.updateCustomDrink(updatedDrink);
+        } else {
+          throw Exception("Drink not found");
+        }
+      }
+
+      widget.onSave();
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Error saving drink. Please try again.'),
+          backgroundColor: Colors.red[600],
         ),
       );
     }
-
-    widget.onSave();
-    Navigator.pop(context);
   }
 
   void _deleteDrink() {
@@ -118,8 +153,9 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
               } else {
                 StorageService.removeCustomDrink(widget.drinkId);
               }
-              Navigator.pop(context);
-              Navigator.pop(context);
+              widget.onSave(); // Ensure parent updates on delete too
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close screen
             },
             child: Text(
               'Delete',
@@ -138,7 +174,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(widget.isPredefined ? 'Edit Drink' : 'Edit Drink'),
+        title: Text(widget.isPredefined ? 'Edit Default Drink' : 'Edit Drink'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,

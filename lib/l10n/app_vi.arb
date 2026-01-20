@@ -1,0 +1,25 @@
+{
+    "appTitle": "Theo Dõi Caffeine",
+    "historyTitle": "Lịch Sử",
+    "noHistory": "Chưa có lịch sử",
+    "startTracking": "Bắt đầu theo dõi lượng caffeine của bạn",
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua",
+    "drinksConsumed": "Đồ uống đã dùng",
+    "deleteEntry": "Xóa mục",
+    "deleteConfirmation": "Xóa {drinkName} ({amount} mg) khỏi lịch sử?",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "save": "Lưu thay đổi",
+    "editDrink": "Chỉnh sửa đồ uống",
+    "drinkName": "Tên đồ uống",
+    "caffeineContent": "Hàm lượng caffeine",
+    "fillAllFields": "Vui lòng điền tất cả các trường",
+    "settings": "Cài đặt",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "dailyLimit": "Giới hạn hàng ngày",
+    "addCustom": "Thêm đồ uống tùy chỉnh"
+
+}

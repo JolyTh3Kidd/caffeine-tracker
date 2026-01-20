@@ -1,12 +1,30 @@
 {
-    "appName": "Caffeine Tracker",
+    "appTitle": "Caffeine Tracker",
+    "historyTitle": "Caffeine History",
+    "noHistory": "No history yet",
+    "startTracking": "Start tracking your caffeine intake",
     "today": "Today",
-    "addDrink": "Add drink",
-    "confirmAdd": "Add {drink}?",
+    "yesterday": "Yesterday",
+    "drinksConsumed": "Drinks Consumed",
+    "deleteEntry": "Delete Entry",
+    "deleteConfirmation": "Remove {drinkName} ({amount} mg) from history?",
+    "@deleteConfirmation": {
+        "placeholders": {
+            "drinkName": {},
+            "amount": {}
+        }
+    },
     "cancel": "Cancel",
-    "confirm": "Confirm",
-    "limitExceeded": "Daily caffeine limit exceeded",
-    "customDrinks": "Custom drinks",
-    "addCustom": "Add custom drink",
-    "history": "History"
+    "delete": "Delete",
+    "save": "Save Changes",
+    "editDrink": "Edit Drink",
+    "drinkName": "Drink Name",
+    "caffeineContent": "Caffeine Content",
+    "fillAllFields": "Please fill all fields",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "selectLanguage": "Select Language",
+    "dailyLimit": "Daily Limit",
+    "addCustom": "Add Custom Drink"
 }
