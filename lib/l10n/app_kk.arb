@@ -1,6 +1,7 @@
 {
     "appTitle": "Кофеин Трекері",
     "historyTitle": "Кофеин Тарихы",
+    "caffeineLimit": "Кофеин Шегі",
     "noHistory": "Әзірге тарих жоқ",
     "startTracking": "Кофеин қабылдауды қадағалауды бастаңыз",
     "today": "Бүгін",
@@ -20,5 +21,8 @@
     "theme": "Тақырып",
     "selectLanguage": "Тілді таңдаңыз",
     "dailyLimit": "Күндізгі шектеу",
-    "addCustom": "Жеке сусын қосу"
+    "addCustom": "Жеке сусын қосу",
+    "systemTheme": "Жүйе Түсі",
+    "lightTheme": "Жарық Түсі",
+    "darkTheme": "Қара Түсі"
 }

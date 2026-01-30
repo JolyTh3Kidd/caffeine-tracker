@@ -1,6 +1,7 @@
 {
     "appTitle": "Caffeine Tracker",
     "historyTitle": "Caffeine History",
+    "caffeineLimit": "Caffeine Limit",
     "noHistory": "No history yet",
     "startTracking": "Start tracking your caffeine intake",
     "today": "Today",
@@ -26,5 +27,8 @@
     "theme": "Theme",
     "selectLanguage": "Select Language",
     "dailyLimit": "Daily Limit",
-    "addCustom": "Add Custom Drink"
+    "addCustom": "Add Custom Drink",
+    "systemTheme": "System Theme",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme"
 }

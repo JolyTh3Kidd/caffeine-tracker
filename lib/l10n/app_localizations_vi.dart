@@ -15,6 +15,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get historyTitle => 'Lịch Sử';
 
   @override
+  String get caffeineLimit => 'Giới Hạn Caffeine';
+
+  @override
   String get noHistory => 'Chưa có lịch sử';
 
   @override
@@ -75,4 +78,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get addCustom => 'Thêm đồ uống tùy chỉnh';
+
+  @override
+  String get systemTheme => 'Giao Diện Hệ Thống';
+
+  @override
+  String get lightTheme => 'Chủ đề sáng';
+
+  @override
+  String get darkTheme => 'Chủ đề tối';
 }

@@ -15,6 +15,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get historyTitle => '历史记录';
 
   @override
+  String get caffeineLimit => '咖啡因限量';
+
+  @override
   String get noHistory => '暂无记录';
 
   @override
@@ -75,4 +78,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get addCustom => '添加自定义饮品';
+
+  @override
+  String get systemTheme => '系统主题';
+
+  @override
+  String get lightTheme => '浅色主题';
+
+  @override
+  String get darkTheme => '深色主题';
 }

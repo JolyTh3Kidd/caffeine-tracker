@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Caffeine History'**
   String get historyTitle;
 
+  /// No description provided for @caffeineLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Caffeine Limit'**
+  String get caffeineLimit;
+
   /// No description provided for @noHistory.
   ///
   /// In en, this message translates to:
@@ -235,6 +241,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Custom Drink'**
   String get addCustom;
+
+  /// No description provided for @systemTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'System Theme'**
+  String get systemTheme;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Theme'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Theme'**
+  String get darkTheme;
 }
 
 class _AppLocalizationsDelegate

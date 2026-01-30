@@ -1,6 +1,7 @@
 {
     "appTitle": "Rastreador de Cafeína",
     "historyTitle": "Historial de Cafeína",
+    "caffeineLimit": "Límite de Cafeína",
     "noHistory": "Sin historial aún",
     "startTracking": "Empieza a registrar tu consumo",
     "today": "Hoy",
@@ -20,5 +21,8 @@
     "theme": "Tema",
     "selectLanguage": "Seleccionar Idioma",
     "dailyLimit": "Límite Diario",
-    "addCustom": "Añadir bebida personalizada"
+    "addCustom": "Añadir bebida personalizada",
+    "systemTheme": "Tema Del Sistema",
+    "lightTheme": "Tema Claro",
+    "darkTheme": "Tema Oscuro"
 }

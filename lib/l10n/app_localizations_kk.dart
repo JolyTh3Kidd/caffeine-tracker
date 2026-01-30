@@ -15,6 +15,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get historyTitle => 'Кофеин Тарихы';
 
   @override
+  String get caffeineLimit => 'Кофеин Шегі';
+
+  @override
   String get noHistory => 'Әзірге тарих жоқ';
 
   @override
@@ -75,4 +78,13 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get addCustom => 'Жеке сусын қосу';
+
+  @override
+  String get systemTheme => 'Жүйе Түсі';
+
+  @override
+  String get lightTheme => 'Жарық Түсі';
+
+  @override
+  String get darkTheme => 'Қара Түсі';
 }

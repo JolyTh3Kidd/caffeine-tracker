@@ -1,6 +1,7 @@
 {
     "appTitle": "咖啡因追踪",
     "historyTitle": "历史记录",
+    "caffeineLimit": "咖啡因限量",
     "noHistory": "暂无记录",
     "startTracking": "开始追踪您的咖啡因摄入量",
     "today": "今天",
@@ -20,5 +21,8 @@
     "theme": "主题",
     "selectLanguage": "选择语言",
     "dailyLimit": "每日限额",
-    "addCustom": "添加自定义饮品"
+    "addCustom": "添加自定义饮品",
+    "systemTheme": "系统主题",
+    "lightTheme": "浅色主题",
+    "darkTheme": "深色主题"
 }

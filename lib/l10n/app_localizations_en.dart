@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyTitle => 'Caffeine History';
 
   @override
+  String get caffeineLimit => 'Caffeine Limit';
+
+  @override
   String get noHistory => 'No history yet';
 
   @override
@@ -75,4 +78,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addCustom => 'Add Custom Drink';
+
+  @override
+  String get systemTheme => 'System Theme';
+
+  @override
+  String get lightTheme => 'Light Theme';
+
+  @override
+  String get darkTheme => 'Dark Theme';
 }

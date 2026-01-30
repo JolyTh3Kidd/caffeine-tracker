@@ -1,6 +1,7 @@
 {
     "appTitle": "Theo Dõi Caffeine",
     "historyTitle": "Lịch Sử",
+    "caffeineLimit": "Giới Hạn Caffeine",
     "noHistory": "Chưa có lịch sử",
     "startTracking": "Bắt đầu theo dõi lượng caffeine của bạn",
     "today": "Hôm nay",
@@ -20,6 +21,8 @@
     "theme": "Giao diện",
     "selectLanguage": "Chọn ngôn ngữ",
     "dailyLimit": "Giới hạn hàng ngày",
-    "addCustom": "Thêm đồ uống tùy chỉnh"
-
+    "addCustom": "Thêm đồ uống tùy chỉnh",
+    "systemTheme": "Giao Diện Hệ Thống",
+    "lightTheme": "Chủ đề sáng",
+    "darkTheme": "Chủ đề tối"
 }

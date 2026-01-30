@@ -247,28 +247,28 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('System Theme'),
+                title: Text(AppLocalizations.of(context)!.systemTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.system);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                title: const Text('Light Theme'),
+                title: Text(AppLocalizations.of(context)!.lightTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.light);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                title: const Text('Dark Theme'),
+                title: Text(AppLocalizations.of(context)!.darkTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.dark);
                   Navigator.pop(context);
                 },
               ),
               const SizedBox(height: 16),
-              const Text('Caffeine Limit'),
+              Text(AppLocalizations.of(context)!.caffeineLimit),
               Slider(
                 min: 100,
                 max: 600,
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -297,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
                 Navigator.pop(context);
               },
-              child: const Text('Save'),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         ),
