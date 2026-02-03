@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caffeine_tracker/l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../models/custom_drink.dart';
 import '../services/storage_service.dart';
@@ -19,6 +20,34 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  String _selectedIcon = 'local_cafe';
+
+  final List<String> _availableIcons = [
+    'local_cafe',
+    'coffee',
+    'emoji_food_beverage',
+    'coffee_maker',
+    'bolt',
+    'icecream',
+  ];
+
+  IconData _getIconData(String name) {
+    switch (name) {
+      case 'coffee':
+        return Icons.coffee;
+      case 'emoji_food_beverage':
+        return Icons.emoji_food_beverage;
+      case 'coffee_maker':
+        return Icons.coffee_maker;
+      case 'bolt':
+        return Icons.bolt;
+      case 'icecream':
+        return Icons.icecream;
+      case 'local_cafe':
+      default:
+        return Icons.local_cafe;
+    }
+  }
 
   @override
   void initState() {
@@ -35,8 +64,8 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
-        .animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
     );
 
@@ -55,10 +84,11 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
     if (_nameController.text.isEmpty || _caffeineController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please fill all fields'),
+          content: Text(AppLocalizations.of(context)!.fillAllFields),
           backgroundColor: Colors.red[600],
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       return;
@@ -70,6 +100,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _nameController.text,
       caffeine: int.parse(_caffeineController.text),
+      icon: _selectedIcon,
     );
 
     StorageService.addCustomDrink(drink);
@@ -84,7 +115,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Add Custom Drink'),
+        title: Text(AppLocalizations.of(context)!.addCustom),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -106,15 +137,15 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         colors: [
-                          Colors.brown[300]!,
-                          Colors.brown[600]!,
+                          Theme.of(context).primaryColor.withValues(alpha: 0.7),
+                          Theme.of(context).primaryColor,
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: const Icon(
-                      Icons.local_cafe,
+                    child: Icon(
+                      _getIconData(_selectedIcon),
                       color: Colors.white,
                       size: 40,
                     ),
@@ -123,8 +154,8 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                   // Drink name field
                   _buildInputField(
                     controller: _nameController,
-                    label: 'Drink Name',
-                    hint: 'e.g., Iced Latte',
+                    label: AppLocalizations.of(context)!.drinkName,
+                    hint: AppLocalizations.of(context)!.hintDrinkName,
                     icon: Icons.local_cafe,
                     isDark: isDark,
                   ),
@@ -132,12 +163,63 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                   // Caffeine input field
                   _buildInputField(
                     controller: _caffeineController,
-                    label: 'Caffeine Content',
-                    hint: 'e.g., 95',
+                    label: AppLocalizations.of(context)!.caffeineContent,
+                    hint: AppLocalizations.of(context)!.hintCaffeine,
                     icon: Icons.bolt,
                     keyboardType: TextInputType.number,
                     isDark: isDark,
-                    suffix: 'mg',
+                    suffix: AppLocalizations.of(context)!.unitMg,
+                  ),
+                  const SizedBox(height: 24),
+                  // Icon Selection
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4, bottom: 12),
+                      child: Text(
+                        AppLocalizations.of(context)!.chooseIcon,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: _availableIcons.map((iconName) {
+                      final isSelected = _selectedIcon == iconName;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIcon = iconName;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          child: Icon(
+                            _getIconData(iconName),
+                            color: isSelected
+                                ? Colors.white
+                                : Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(height: 36),
                   // Save button
@@ -148,15 +230,19 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                         borderRadius: BorderRadius.circular(14),
                         gradient: LinearGradient(
                           colors: [
-                            Colors.brown[500]!,
-                            Colors.brown[700]!,
+                            Theme.of(context).primaryColor,
+                            Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.8),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.brown.withOpacity(0.3),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
                           ),
@@ -173,13 +259,13 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.check_circle, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              'Save Drink',
+                              AppLocalizations.of(context)!.saveDrink,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -199,7 +285,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         side: BorderSide(
-                          color: Colors.grey[400]!,
+                          color: Theme.of(context).dividerColor,
                           width: 1.5,
                         ),
                         shape: RoundedRectangleBorder(
@@ -207,7 +293,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
                         ),
                       ),
                       child: Text(
-                        'Cancel',
+                        AppLocalizations.of(context)!.cancel,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -239,7 +325,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : Colors.black).withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -251,11 +337,9 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
         inputFormatters: keyboardType == TextInputType.number
             ? [FilteringTextInputFormatter.digitsOnly]
             : [],
-        style: TextStyle(
-          fontSize: 16,
-          color: isDark ? Colors.white : Colors.black,
-          fontWeight: FontWeight.w500,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -265,7 +349,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
           ),
           prefixIcon: Icon(
             icon,
-            color: Colors.brown[600],
+            color: Theme.of(context).primaryColor,
             size: 22,
           ),
           suffixText: suffix,
@@ -275,13 +359,10 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
             fontSize: 14,
           ),
           filled: true,
-          fillColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(
-              color: Colors.grey[300]!,
-              width: 1.5,
-            ),
+            borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
@@ -293,7 +374,7 @@ class _AddCustomDrinkScreenState extends State<AddCustomDrinkScreen>
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-              color: Colors.brown[600]!,
+              color: Theme.of(context).primaryColor,
               width: 2,
             ),
           ),

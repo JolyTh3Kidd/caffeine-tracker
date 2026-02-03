@@ -180,8 +180,14 @@ class StorageService {
   }
 
   // Save modifications to predefined drink
-  static void updatePredefinedDrink(String id, String name, int caffeine) {
-    final data = {'id': id, 'name': name, 'caffeine': caffeine};
+  static void updatePredefinedDrink(
+      String id, String name, int caffeine, String icon) {
+    final data = {
+      'id': id,
+      'name': name,
+      'caffeine': caffeine,
+      'icon': icon,
+    };
     _prefs.setString('predefined_$id', jsonEncode(data));
   }
 
@@ -196,6 +202,7 @@ class StorageService {
           id: drink.id,
           name: modified['name'] as String,
           caffeine: modified['caffeine'] as int,
+          icon: modified['icon'] as String? ?? drink.icon,
           isModified: true,
         );
       }

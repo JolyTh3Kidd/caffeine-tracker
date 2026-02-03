@@ -30,5 +30,68 @@
     "drinkLatte": "Латте",
     "drinkAmericano": "Американо",
     "drinkFilter": "Сүзгі кофе",
-    "drinkInstant": "Ерігіш кофе"
+    "drinkInstant": "Ерігіш кофе",
+    "editDefaultDrink": "Редакциялау",
+    "hintDrinkName": "e.g., Суық Латте",
+    "hintCaffeine": "e.g., 95",
+    "unitMg": "mg",
+    "saveDrink": "Сақтау",
+    "filterByDate": "Тірі таңдау",
+    "filteredLabel": "Тірі: {label}",
+    "@filteredLabel": {
+        "placeholders": {
+            "label": {}
+        }
+    },
+    "totalLabel": "Жалпы: {amount} mg",
+    "@totalLabel": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "clearFilter": "Тірін тазалаш",
+    "noRecordsFound": "Ішімдіктер туралы жазбалар жоқ",
+    "tryDifferentDateRange": "Басқа тірін таңдаңыз",
+    "overLimit": "Шектен тыс {amount} mg",
+    "@overLimit": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "withinLimit": "Шектен тыс",
+    "noDrinkRecords": "Ішімдіктер туралы жазбалар жоқ",
+    "specificDay": "Нақты күн",
+    "dateRange": "Дата тірі",
+    "specificMonth": "Нақты ай",
+    "selectMonth": "Суранып таңдаңыз",
+    "deleteDrinkTitle": "Сусын жоюға қабылдаңыз?",
+    "deleteDrinkContent": "Сусын \"{drinkName}\" жоюға қабылдаңыз?",
+    "@deleteDrinkContent": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirmAddTitle": "Қосу {drinkName}?",
+    "@confirmAddTitle": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirm": "Confirm",
+    "invalidCaffeineNumber": "Кофеин мөлшерінің бір неімді санын еңгізіңіз",
+    "errorSavingDrink": "Сусын сақтау қатысы. Қайта басқарай.",
+    "deleteDrinkTooltip": "Сусынды жою",
+    "quickAdd": "Қолмен қосу",
+    "manualAdd": "Қолмен қосу",
+    "manualReduce": "Қолмен азайту",
+    "remaining": "Қалған",
+    "statusOverLimit": "Шектен тыс",
+    "dailyGoalPercent": "Күнделікті мақсаттың {percent}%",
+    "@dailyGoalPercent": {
+        "placeholders": {
+            "percent": {}
+        }
+    },
+    "chooseIcon": "Иконканы таңдаңыз",
+    "editDrinkIcon": "Иконканы өңдеу"
 }

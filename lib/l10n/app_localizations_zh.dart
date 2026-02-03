@@ -105,4 +105,115 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get drinkInstant => '速溶咖啡';
+
+  @override
+  String get hintDrinkName => '例如，冰拿铁';
+
+  @override
+  String get hintCaffeine => '例如，95';
+
+  @override
+  String get unitMg => 'mg';
+
+  @override
+  String get saveDrink => '保存饮品';
+
+  @override
+  String get filterByDate => '按日期筛选';
+
+  @override
+  String filteredLabel(Object label) {
+    return '筛选: $label';
+  }
+
+  @override
+  String totalLabel(Object amount) {
+    return 'Total: $amount mg';
+  }
+
+  @override
+  String get clearFilter => '清除筛选';
+
+  @override
+  String get noRecordsFound => '没有记录';
+
+  @override
+  String get tryDifferentDateRange => '尝试选择不同的日期范围';
+
+  @override
+  String overLimit(Object amount) {
+    return '超过 $amount mg';
+  }
+
+  @override
+  String get withinLimit => '在限制内';
+
+  @override
+  String get noDrinkRecords => '没有饮品记录';
+
+  @override
+  String get specificDay => '特定日期';
+
+  @override
+  String get dateRange => '日期范围';
+
+  @override
+  String get specificMonth => '特定月份';
+
+  @override
+  String get selectMonth => '选择月份 任选日期';
+
+  @override
+  String get deleteDrinkTitle => '删除饮品?';
+
+  @override
+  String deleteDrinkContent(Object drinkName) {
+    return '您确定要删除吗 \"$drinkName\"?';
+  }
+
+  @override
+  String confirmAddTitle(Object drinkName) {
+    return '添加 $drinkName?';
+  }
+
+  @override
+  String get confirm => '确认';
+
+  @override
+  String get editDefaultDrink => '编辑默认饮品';
+
+  @override
+  String get invalidCaffeineNumber => '请输入一个有效的咖啡因数字';
+
+  @override
+  String get errorSavingDrink => '保存饮品时出错。请重试。';
+
+  @override
+  String get deleteDrinkTooltip => '删除饮品';
+
+  @override
+  String get quickAdd => '快速添加';
+
+  @override
+  String get manualAdd => '手动添加';
+
+  @override
+  String get manualReduce => '手动缩减';
+
+  @override
+  String get remaining => '剩余';
+
+  @override
+  String get statusOverLimit => '超过限制';
+
+  @override
+  String dailyGoalPercent(Object percent) {
+    return '$percent% 每日目标';
+  }
+
+  @override
+  String get chooseIcon => '选择图标';
+
+  @override
+  String get editDrinkIcon => '编辑饮品图标';
 }

@@ -30,5 +30,68 @@
     "drinkLatte": "Latte",
     "drinkAmericano": "Americano",
     "drinkFilter": "Filtro",
-    "drinkInstant": "Instantáneo"
+    "drinkInstant": "Instantáneo",
+    "editDefaultDrink": "Editar Bebida Predeterminada",
+    "hintDrinkName": "e.g., Latte",
+    "hintCaffeine": "e.g., 95",
+    "unitMg": "mg",
+    "saveDrink": "Guardar Bebida",
+    "filterByDate": "Filtrar por Fecha",
+    "filteredLabel": "Filtrado: {label}",
+    "@filteredLabel": {
+        "placeholders": {
+            "label": {}
+        }
+    },
+    "totalLabel": "Total: {amount} mg",
+    "@totalLabel": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "clearFilter": "Limpiar Filtro",
+    "noRecordsFound": "No se encontraron registros",
+    "tryDifferentDateRange": "Prueba a seleccionar un intervalo de fechas diferente.",
+    "overLimit": "Por encima del límite por {amount} mg",
+    "@overLimit": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "withinLimit": "Dentro del límite",
+    "noDrinkRecords": "No hay registros de bebidas",
+    "specificDay": "Día Específico",
+    "dateRange": "Rango de Fecha",
+    "specificMonth": "Mes Específico",
+    "selectMonth": "SELECCIONAR MES (ESCOGE CUALQUIER DIA)",
+    "deleteDrinkTitle": "Eliminar Bebida?",
+    "deleteDrinkContent": "¿Estás seguro de que quieres eliminar \"{drinkName}\"?",
+    "@deleteDrinkContent": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirmAddTitle": "Añadir {drinkName}?",
+    "@confirmAddTitle": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirm": "Confirmar",
+    "invalidCaffeineNumber": "Por favor ingresa un número válido para la cafeína",
+    "errorSavingDrink": "Error al guardar la bebida. Por favor intenta de nuevo.",
+    "deleteDrinkTooltip": "Eliminar bebida",
+    "quickAdd": "Añadir rápidamente",
+    "manualAdd": "Añadir Manualmente",
+    "manualReduce": "Reducción Manual",
+    "remaining": "Restante",
+    "statusOverLimit": "Por encima del límite",
+    "dailyGoalPercent": "{percent}% del Objetivo Diario",
+    "@dailyGoalPercent": {
+        "placeholders": {
+            "percent": {}
+        }
+    },
+    "chooseIcon": "Seleccionar icono",
+    "editDrinkIcon": "Editar icono de bebida"
 }

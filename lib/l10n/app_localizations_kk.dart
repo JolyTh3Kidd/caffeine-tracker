@@ -105,4 +105,116 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get drinkInstant => 'Ерігіш кофе';
+
+  @override
+  String get hintDrinkName => 'e.g., Суық Латте';
+
+  @override
+  String get hintCaffeine => 'e.g., 95';
+
+  @override
+  String get unitMg => 'mg';
+
+  @override
+  String get saveDrink => 'Сақтау';
+
+  @override
+  String get filterByDate => 'Тірі таңдау';
+
+  @override
+  String filteredLabel(Object label) {
+    return 'Тірі: $label';
+  }
+
+  @override
+  String totalLabel(Object amount) {
+    return 'Жалпы: $amount mg';
+  }
+
+  @override
+  String get clearFilter => 'Тірін тазалаш';
+
+  @override
+  String get noRecordsFound => 'Ішімдіктер туралы жазбалар жоқ';
+
+  @override
+  String get tryDifferentDateRange => 'Басқа тірін таңдаңыз';
+
+  @override
+  String overLimit(Object amount) {
+    return 'Шектен тыс $amount mg';
+  }
+
+  @override
+  String get withinLimit => 'Шектен тыс';
+
+  @override
+  String get noDrinkRecords => 'Ішімдіктер туралы жазбалар жоқ';
+
+  @override
+  String get specificDay => 'Нақты күн';
+
+  @override
+  String get dateRange => 'Дата тірі';
+
+  @override
+  String get specificMonth => 'Нақты ай';
+
+  @override
+  String get selectMonth => 'Суранып таңдаңыз';
+
+  @override
+  String get deleteDrinkTitle => 'Сусын жоюға қабылдаңыз?';
+
+  @override
+  String deleteDrinkContent(Object drinkName) {
+    return 'Сусын \"$drinkName\" жоюға қабылдаңыз?';
+  }
+
+  @override
+  String confirmAddTitle(Object drinkName) {
+    return 'Қосу $drinkName?';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get editDefaultDrink => 'Редакциялау';
+
+  @override
+  String get invalidCaffeineNumber =>
+      'Кофеин мөлшерінің бір неімді санын еңгізіңіз';
+
+  @override
+  String get errorSavingDrink => 'Сусын сақтау қатысы. Қайта басқарай.';
+
+  @override
+  String get deleteDrinkTooltip => 'Сусынды жою';
+
+  @override
+  String get quickAdd => 'Қолмен қосу';
+
+  @override
+  String get manualAdd => 'Қолмен қосу';
+
+  @override
+  String get manualReduce => 'Қолмен азайту';
+
+  @override
+  String get remaining => 'Қалған';
+
+  @override
+  String get statusOverLimit => 'Шектен тыс';
+
+  @override
+  String dailyGoalPercent(Object percent) {
+    return 'Күнделікті мақсаттың $percent%';
+  }
+
+  @override
+  String get chooseIcon => 'Иконканы таңдаңыз';
+
+  @override
+  String get editDrinkIcon => 'Иконканы өңдеу';
 }

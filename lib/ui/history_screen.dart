@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:caffeine_tracker/l10n/app_localizations.dart';
 import '../services/storage_service.dart';
 import '../models/drink_entry.dart';
 
@@ -65,7 +67,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.calendar_view_day),
-              title: const Text('Specific Day'),
+              title: Text(AppLocalizations.of(context)!.specificDay),
               onTap: () async {
                 Navigator.pop(context);
                 final picked = await showDatePicker(
@@ -77,14 +79,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 if (picked != null) {
                   setState(() {
                     _filterRange = DateTimeRange(start: picked, end: picked);
-                    _filterLabel = "${picked.day}/${picked.month}/${picked.year}";
+                    _filterLabel =
+                        "${picked.day}/${picked.month}/${picked.year}";
                   });
                 }
               },
             ),
             ListTile(
               leading: const Icon(Icons.date_range),
-              title: const Text('Date Range'),
+              title: Text(AppLocalizations.of(context)!.dateRange),
               onTap: () async {
                 Navigator.pop(context);
                 final picked = await showDateRangePicker(
@@ -95,14 +98,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 if (picked != null) {
                   setState(() {
                     _filterRange = picked;
-                    _filterLabel = "${picked.start.day}/${picked.start.month} - ${picked.end.day}/${picked.end.month}";
+                    _filterLabel =
+                        "${picked.start.day}/${picked.start.month} - ${picked.end.day}/${picked.end.month}";
                   });
                 }
               },
             ),
             ListTile(
               leading: const Icon(Icons.calendar_month),
-              title: const Text('Specific Month'),
+              title: Text(AppLocalizations.of(context)!.specificMonth),
               onTap: () async {
                 Navigator.pop(context);
                 _pickMonth(context);
@@ -111,7 +115,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             if (_filterRange != null)
               ListTile(
                 leading: const Icon(Icons.clear, color: Colors.red),
-                title: const Text('Clear Filter', style: TextStyle(color: Colors.red)),
+                title: Text(AppLocalizations.of(context)!.clearFilter,
+                    style: const TextStyle(color: Colors.red)),
                 onTap: () {
                   Navigator.pop(context);
                   _clearFilter();
@@ -132,12 +137,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
       initialDate: now,
       firstDate: DateTime(2020),
       lastDate: now,
-      helpText: 'SELECT MONTH (PICK ANY DAY)',
+      helpText: AppLocalizations.of(context)!.selectMonth,
     );
 
     if (picked != null) {
       final start = DateTime(picked.year, picked.month, 1);
-      final end = DateTime(picked.year, picked.month + 1, 0); // Last day of month
+      final end =
+          DateTime(picked.year, picked.month + 1, 0); // Last day of month
       setState(() {
         _filterRange = DateTimeRange(start: start, end: end);
         _filterLabel = "${_getMonthName(picked.month)} ${picked.year}";
@@ -146,8 +152,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   String _getMonthName(int month) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[month - 1];
+    return DateFormat.MMM(AppLocalizations.of(context)!.localeName)
+        .format(DateTime(2024, month));
   }
   // --- NEW FILTER METHODS END ---
 
@@ -155,17 +161,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Entry'),
-        content: Text('Remove ${entry.name} (${entry.caffeine} mg) from history?'),
+        title: Text(AppLocalizations.of(context)!.deleteEntry),
+        content: Text(AppLocalizations.of(context)!
+            .deleteConfirmation(entry.name, entry.caffeine)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -185,13 +192,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
       entries = entries.where((e) {
         final date = _parseDate(e.key);
         if (date == null) return false;
-        
+
         final entryDate = DateUtils.dateOnly(date);
         final start = DateUtils.dateOnly(_filterRange!.start);
         final end = DateUtils.dateOnly(_filterRange!.end);
-        
-        return (entryDate.isAtSameMomentAs(start) || entryDate.isAfter(start)) && 
-               (entryDate.isAtSameMomentAs(end) || entryDate.isBefore(end));
+
+        return (entryDate.isAtSameMomentAs(start) ||
+                entryDate.isAfter(start)) &&
+            (entryDate.isAtSameMomentAs(end) || entryDate.isBefore(end));
       }).toList();
     }
 
@@ -225,42 +233,85 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return null;
   }
 
-  String _getDayName(DateTime date) {
+  String _getDayName(BuildContext context, DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     if (dateOnly == today) {
-      return 'Today';
+      return AppLocalizations.of(context)!.today;
     } else if (dateOnly == yesterday) {
-      return 'Yesterday';
+      return AppLocalizations.of(context)!.yesterday;
     }
 
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days[date.weekday - 1];
+    return DateFormat.E(AppLocalizations.of(context)!.localeName).format(date);
+  }
+
+  String _getLocalizedDrinkName(BuildContext context, String name) {
+    // Check for internal tokens first
+    if (name == '__MANUAL_ADD__') {
+      return AppLocalizations.of(context)!.manualAdd;
+    }
+    if (name == '__MANUAL_REDUCE__') {
+      return AppLocalizations.of(context)!.manualReduce;
+    }
+
+    // Fallback for legacy strings or exact matches in other languages
+    // This is a bit of a bridge for existing data
+    final manualAddStrings = [
+      'Manual Add',
+      '手动添加',
+      'Añadir rápidamente',
+      'Thêm nhanh',
+      'Қолмен қосу'
+    ];
+    final manualReduceStrings = [
+      'Manual Reduce',
+      '手动缩减',
+      'Reducción Manual',
+      'Giảm thủ công',
+      'Қолмен азайту'
+    ];
+
+    if (manualAddStrings.contains(name)) {
+      return AppLocalizations.of(context)!.manualAdd;
+    }
+    if (manualReduceStrings.contains(name)) {
+      return AppLocalizations.of(context)!.manualReduce;
+    }
+
+    // Also check for localized predefined drink names if they match
+    // (though most are already localized at the time of addition in current logic)
+    // but better to keep them as stored unless it's a manual adjustment.
+
+    return name;
   }
 
   @override
   Widget build(BuildContext context) {
     final sortedHistory = _getSortedHistory();
     // --- NEW: Calculate Total for Period ---
-    final periodTotal = sortedHistory.fold<int>(0, (sum, item) => sum + item.value);
+    final periodTotal =
+        sortedHistory.fold<int>(0, (sum, item) => sum + item.value);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Caffeine History'),
+        title: Text(AppLocalizations.of(context)!.historyTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         // --- NEW: Filter Action ---
         actions: [
           IconButton(
             icon: Icon(
-              _filterRange != null ? Icons.filter_alt : Icons.filter_alt_outlined,
-              color: _filterRange != null ? const Color(0xFF6F4E37) : null,
+              _filterRange != null
+                  ? Icons.filter_alt
+                  : Icons.filter_alt_outlined,
+              color:
+                  _filterRange != null ? Theme.of(context).primaryColor : null,
             ),
-            tooltip: 'Filter by Date',
+            tooltip: AppLocalizations.of(context)!.filterByDate,
             onPressed: _showFilterOptions,
           ),
         ],
@@ -288,16 +339,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Filtered: $_filterLabel',
+                          AppLocalizations.of(context)!
+                              .filteredLabel(_filterLabel!),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Total: $periodTotal mg',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF6F4E37),
-                          ),
+                          AppLocalizations.of(context)!.totalLabel(periodTotal),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                         ),
                       ],
                     ),
@@ -305,7 +358,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   IconButton(
                     icon: const Icon(Icons.close, size: 20),
                     onPressed: _clearFilter,
-                    tooltip: 'Clear Filter',
+                    tooltip: AppLocalizations.of(context)!.clearFilter,
                   ),
                 ],
               ),
@@ -320,18 +373,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.history, size: 64, color: Colors.grey[400]),
+                          Icon(Icons.history,
+                              size: 64, color: Colors.grey[400]),
                           const SizedBox(height: 16),
                           Text(
-                            _filterRange != null ? 'No records found' : 'No history yet',
+                            _filterRange != null
+                                ? AppLocalizations.of(context)!.noRecordsFound
+                                : AppLocalizations.of(context)!.noHistory,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            _filterRange != null 
-                              ? 'Try selecting a different date range'
-                              : 'Start tracking your caffeine intake',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            _filterRange != null
+                                ? AppLocalizations.of(context)!
+                                    .tryDifferentDateRange
+                                : AppLocalizations.of(context)!.startTracking,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
                                   color: Colors.grey[600],
                                 ),
                             textAlign: TextAlign.center,
@@ -348,9 +408,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       final caffeine = entry.value;
                       final date = _parseDate(entry.key);
                       final dateStr = _formatDateKey(entry.key);
-                      final dayName = date != null ? _getDayName(date) : '';
+                      final dayName =
+                          date != null ? _getDayName(context, date) : '';
                       final exceeded = caffeine > caffeineLimit;
-                      final progress = (caffeine / caffeineLimit).clamp(0.0, 1.5);
+                      final progress =
+                          (caffeine / caffeineLimit).clamp(0.0, 1.5);
 
                       // Get drink entries for this date
                       final drinkEntries = date != null
@@ -361,12 +423,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            color: Theme.of(context).cardTheme.color,
                             border: Border.all(
-                              color: isDark
-                                  ? const Color(0xFF2A2A2A)
-                                  : const Color(0xFFEEEEEE),
+                              color: Theme.of(context)
+                                  .dividerColor
+                                  .withValues(alpha: 0.1),
                               width: 1,
                             ),
                           ),
@@ -377,7 +439,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                             child: ExpansionTile(
                               tilePadding: const EdgeInsets.all(16),
-                              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              childrenPadding:
+                                  const EdgeInsets.fromLTRB(16, 0, 16, 16),
                               title: Row(
                                 children: [
                                   // Progress ring
@@ -393,18 +456,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           child: CircularProgressIndicator(
                                             value: progress,
                                             strokeWidth: 5,
-                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
                                               exceeded
                                                   ? Colors.red[400]!
-                                                  : const Color(0xFF6F4E37),
+                                                  : Theme.of(context)
+                                                      .primaryColor,
                                             ),
-                                            backgroundColor: isDark
-                                                ? const Color(0xFF2A2A2A)
-                                                : const Color(0xFFF0F0F0),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .surfaceContainerHighest,
                                           ),
                                         ),
                                         Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               '$caffeine',
@@ -430,7 +496,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   // Date and status info
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           dayName,
@@ -460,11 +527,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                               vertical: 4,
                                             ),
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(6),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                               color: Colors.red[50],
                                             ),
                                             child: Text(
-                                              'Over by ${caffeine - caffeineLimit} mg',
+                                              AppLocalizations.of(context)!
+                                                  .overLimit(
+                                                      caffeine - caffeineLimit),
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
@@ -479,11 +549,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                               vertical: 4,
                                             ),
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(6),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
                                               color: Colors.green[50],
                                             ),
                                             child: Text(
-                                              'Within limit',
+                                              AppLocalizations.of(context)!
+                                                  .withinLimit,
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
@@ -498,9 +570,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               ),
                               children: [
                                 Divider(
-                                  color: isDark
-                                      ? const Color(0xFF2A2A2A)
-                                      : const Color(0xFFEEEEEE),
+                                  color: Theme.of(context)
+                                      .dividerColor
+                                      .withValues(alpha: 0.1),
                                   height: 1,
                                   indent: 0,
                                   endIndent: 0,
@@ -510,16 +582,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Drinks Consumed',
+                                      AppLocalizations.of(context)!
+                                          .drinksConsumed,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium
-                                          ?.copyWith(fontWeight: FontWeight.bold),
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: 12),
                                     if (drinkEntries.isEmpty)
                                       Text(
-                                        'No drink records',
+                                        AppLocalizations.of(context)!
+                                            .noDrinkRecords,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -535,7 +610,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         final timeStr =
                                             '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
                                         return Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -546,7 +622,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      entry.name,
+                                                      _getLocalizedDrinkName(
+                                                          context, entry.name),
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodySmall
@@ -562,8 +639,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                           .labelSmall
                                                           ?.copyWith(
                                                             color: isDark
-                                                                ? Colors.grey[400]
-                                                                : Colors.grey[600],
+                                                                ? Colors
+                                                                    .grey[400]
+                                                                : Colors
+                                                                    .grey[600],
                                                           ),
                                                     ),
                                                   ],
@@ -577,8 +656,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                         .textTheme
                                                         .bodySmall
                                                         ?.copyWith(
-                                                          fontWeight: FontWeight.w600,
-                                                          color: const Color(0xFF6F4E37),
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                         ),
                                                   ),
                                                   const SizedBox(width: 8),
@@ -587,16 +669,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                       width: 32,
                                                       height: 32,
                                                       child: IconButton(
-                                                        padding: EdgeInsets.zero,
+                                                        padding:
+                                                            EdgeInsets.zero,
                                                         icon: Icon(
                                                           Icons.delete_outline,
                                                           size: 18,
                                                           color: isDark
                                                               ? Colors.grey[500]
-                                                              : Colors.grey[400],
+                                                              : Colors
+                                                                  .grey[400],
                                                         ),
                                                         onPressed: () =>
-                                                            _confirmDelete(date, entry),
+                                                            _confirmDelete(
+                                                                date, entry),
                                                       ),
                                                     ),
                                                 ],

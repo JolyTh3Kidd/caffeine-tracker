@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/storage_service.dart';
@@ -10,6 +9,7 @@ import '../models/predefined_drink.dart';
 import 'add_custom_drink_screen.dart';
 import 'edit_drink_screen.dart';
 import 'history_screen.dart';
+import '../models/drink_entry.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
@@ -22,24 +22,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int total = StorageService.todayCaffeine;
-  int limit = StorageService.caffeineLimit;
-  late List<CustomDrink> customDrinks;
-  late List<PredefinedDrink> predefinedDrinks;
+  int _todayTotal = StorageService.todayCaffeine;
+  int _dailyLimit = StorageService.caffeineLimit;
+  late List<CustomDrink> _customDrinks;
+  late List<PredefinedDrink> _predefinedDrinks;
 
   @override
   void initState() {
     super.initState();
-    customDrinks = StorageService.customDrinksList;
-    predefinedDrinks = StorageService.getPredefinedDrinks();
+    _refreshData();
   }
 
-  void _add(int mg, {String drinkName = 'Unknown'}) {
+  void _refreshData() {
+    _customDrinks = StorageService.customDrinksList;
+    _predefinedDrinks = StorageService.getPredefinedDrinks();
+    _todayTotal = StorageService.todayCaffeine;
+    _dailyLimit = StorageService.caffeineLimit;
+  }
+
+  void _addDrink(DrinkEntry entry) {
     HapticFeedback.mediumImpact();
+    StorageService.addCaffeine(entry.caffeine, drinkName: entry.name);
     setState(() {
-      StorageService.addCaffeine(mg, drinkName: drinkName);
-      total = StorageService.todayCaffeine;
+      _refreshData();
     });
+  }
+
+  void _editDrink(dynamic drink, {required bool isPredefined}) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => EditDrinkScreen(
+          drinkId: drink.id,
+          initialName: drink.name,
+          initialCaffeine: drink.caffeine,
+          initialIcon: drink.icon,
+          isPredefined: isPredefined,
+          onSave: () {
+            setState(() {
+              _refreshData();
+            });
+          },
+        ),
+        transitionsBuilder: (_, animation, __, child) {
+          return SlideTransition(
+            position: Tween(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   void _openAddCustomDrink() {
@@ -49,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         pageBuilder: (_, __, ___) => AddCustomDrinkScreen(
           onSave: (drink) {
             setState(() {
-              customDrinks = StorageService.customDrinksList;
+              _refreshData();
             });
           },
         ),
@@ -105,190 +140,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language),
-            onPressed: _showLanguageBottomSheet,
-          ),
-          CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: const Icon(CupertinoIcons.calendar),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const HistoryScreen(),
-              ),
-            ),
-          ),
-          CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: const Icon(CupertinoIcons.settings),
-            onPressed: () => _showSettings(context),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            CaffeineOverviewCard(
-              total: total,
-              limit: limit,
-              onManualAdjustment: (amount) {
-                HapticFeedback.lightImpact();
-                setState(() {
-                  StorageService.updateTodayTotal(amount);
-                  total = StorageService.todayCaffeine;
-                });
-              },
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 16),
-                children: [
-                  ...predefinedDrinks.map(
-                    (drink) {
-                      String getName() {
-                        if (drink.isModified) return drink.name;
-                        switch (drink.id) {
-                          case 'espresso':
-                            return l?.drinkEspresso ?? drink.name;
-                          case 'cappuccino':
-                            return l?.drinkCappuccino ?? drink.name;
-                          case 'latte':
-                            return l?.drinkLatte ?? drink.name;
-                          case 'americano':
-                            return l?.drinkAmericano ?? drink.name;
-                          case 'filter':
-                            return l?.drinkFilter ?? drink.name;
-                          case 'instant':
-                            return l?.drinkInstant ?? drink.name;
-                          default:
-                            return drink.name;
-                        }
-                      }
-
-                      final name = getName();
-
-                      return DrinkCard(
-                        name: name,
-                        caffeine: drink.caffeine,
-                        onAdd: () => _add(drink.caffeine, drinkName: name),
-                        onEdit: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => EditDrinkScreen(
-                                drinkId: drink.id,
-                                initialName: name,
-                                initialCaffeine: drink.caffeine,
-                                isPredefined: true,
-                                onSave: () {
-                                  setState(() {
-                                    predefinedDrinks =
-                                        StorageService.getPredefinedDrinks();
-                                  });
-                                },
-                              ),
-                              transitionsBuilder: (_, animation, __, child) {
-                                return SlideTransition(
-                                  position: Tween(
-                                    begin: const Offset(0, 1),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  if (customDrinks.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: Text(
-                        'Custom Drinks',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                  ...customDrinks.map(
-                    (drink) => DrinkCard(
-                      name: drink.name,
-                      caffeine: drink.caffeine,
-                      onAdd: () => _add(drink.caffeine, drinkName: drink.name),
-                      onEdit: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => EditDrinkScreen(
-                              drinkId: drink.id,
-                              initialName: drink.name,
-                              initialCaffeine: drink.caffeine,
-                              isPredefined: false,
-                              onSave: () {
-                                setState(() {
-                                  customDrinks =
-                                      StorageService.customDrinksList;
-                                });
-                              },
-                            ),
-                            transitionsBuilder: (_, animation, __, child) {
-                              return SlideTransition(
-                                position: Tween(
-                                  begin: const Offset(0, 1),
-                                  end: Offset.zero,
-                                ).animate(animation),
-                                child: child,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: ElevatedButton.icon(
-                      onPressed: _openAddCustomDrink,
-                      icon: const Icon(Icons.add),
-                      label: Text(AppLocalizations.of(context)?.addCustom ??
-                          'Add Custom Drink'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showSettings(BuildContext context) {
-    int tempLimit = limit;
+  void _showSettings() {
+    int tempLimit = _dailyLimit;
     showDialog(
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Settings'),
+          title: Text(AppLocalizations.of(context)!.settings),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -339,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 StorageService.setLimit(tempLimit);
                 this.setState(() {
-                  limit = tempLimit;
+                  _refreshData();
                 });
                 Navigator.pop(context);
               },
@@ -347,6 +205,152 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 0,
+            floating: true,
+            pinned: true,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            title: Text(
+              AppLocalizations.of(context)!.appTitle,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            centerTitle: false,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.language),
+                onPressed: _showLanguageBottomSheet,
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const HistoryScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.history),
+              ),
+              IconButton(
+                onPressed: _showSettings,
+                icon: const Icon(Icons.settings_outlined),
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: CaffeineOverviewCard(
+              total: _todayTotal,
+              limit: _dailyLimit,
+              onManualAdjustment: (amount) => _addDrink(
+                DrinkEntry(
+                  // id: DateTime.now().millisecondsSinceEpoch.toString(), // Removed
+                  name: amount > 0 ? '__MANUAL_ADD__' : '__MANUAL_REDUCE__',
+                  caffeine: amount,
+                  timestamp: DateTime.now(),
+                ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.quickAdd,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  IconButton(
+                    onPressed: _openAddCustomDrink,
+                    icon: Icon(Icons.add_circle,
+                        color: Theme.of(context).primaryColor),
+                    tooltip: AppLocalizations.of(context)?.addCustom,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.75,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final allDrinks = [..._predefinedDrinks, ..._customDrinks];
+
+                  if (index >= allDrinks.length) return null;
+
+                  final dynamic drink = allDrinks[index];
+                  final isPredefined = index < _predefinedDrinks.length;
+                  String displayName = drink.name;
+                  if (isPredefined) {
+                    switch (drink.id) {
+                      case 'espresso':
+                        displayName =
+                            AppLocalizations.of(context)!.drinkEspresso;
+                        break;
+                      case 'cappuccino':
+                        displayName =
+                            AppLocalizations.of(context)!.drinkCappuccino;
+                        break;
+                      case 'latte':
+                        displayName = AppLocalizations.of(context)!.drinkLatte;
+                        break;
+                      case 'americano':
+                        displayName =
+                            AppLocalizations.of(context)!.drinkAmericano;
+                        break;
+                      case 'filter':
+                        displayName = AppLocalizations.of(context)!.drinkFilter;
+                        break;
+                      case 'instant':
+                        displayName =
+                            AppLocalizations.of(context)!.drinkInstant;
+                        break;
+                    }
+                  }
+
+                  return DrinkCard(
+                    id: drink.id,
+                    name: displayName,
+                    caffeine: drink.caffeine,
+                    iconName: drink.icon,
+                    onAdd: () => _addDrink(
+                      DrinkEntry(
+                        // id: DateTime.now().millisecondsSinceEpoch.toString(), // Removed
+                        name: displayName,
+                        caffeine: drink.caffeine,
+                        timestamp: DateTime.now(),
+                        // isCustom: !isPredefined, // Removed
+                      ),
+                    ),
+                    onEdit: () => _editDrink(drink, isPredefined: isPredefined),
+                  );
+                },
+                childCount: _predefinedDrinks.length + _customDrinks.length,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

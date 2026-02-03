@@ -14,7 +14,7 @@ class WarningBanner extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         child: Container(
           width: double.infinity,
-          color: Colors.red.withOpacity(0.9),
+          color: Colors.red.withValues(alpha: 0.9),
           padding: const EdgeInsets.all(12),
           child: const Text(
             'Daily caffeine limit exceeded',

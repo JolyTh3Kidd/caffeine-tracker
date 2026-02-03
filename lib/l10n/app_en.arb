@@ -36,5 +36,68 @@
     "drinkLatte": "Latte",
     "drinkAmericano": "Americano",
     "drinkFilter": "Filter",
-    "drinkInstant": "Instant"
+    "drinkInstant": "Instant",
+    "hintDrinkName": "e.g., Iced Latte",
+    "hintCaffeine": "e.g., 95",
+    "unitMg": "mg",
+    "saveDrink": "Save Drink",
+    "filterByDate": "Filter by Date",
+    "filteredLabel": "Filtered: {label}",
+    "@filteredLabel": {
+        "placeholders": {
+            "label": {}
+        }
+    },
+    "totalLabel": "Total: {amount} mg",
+    "@totalLabel": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "clearFilter": "Clear Filter",
+    "noRecordsFound": "No records found",
+    "tryDifferentDateRange": "Try selecting a different date range",
+    "overLimit": "Over by {amount} mg",
+    "@overLimit": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "withinLimit": "Within limit",
+    "noDrinkRecords": "No drink records",
+    "specificDay": "Specific Day",
+    "dateRange": "Date Range",
+    "specificMonth": "Specific Month",
+    "selectMonth": "SELECT MONTH (PICK ANY DAY)",
+    "deleteDrinkTitle": "Delete Drink?",
+    "deleteDrinkContent": "Are you sure you want to delete \"{drinkName}\"?",
+    "@deleteDrinkContent": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirmAddTitle": "Add {drinkName}?",
+    "@confirmAddTitle": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirm": "Confirm",
+    "editDefaultDrink": "Edit Default Drink",
+    "invalidCaffeineNumber": "Please enter a valid number for caffeine",
+    "errorSavingDrink": "Error saving drink. Please try again.",
+    "deleteDrinkTooltip": "Delete drink",
+    "quickAdd": "Quick Add",
+    "manualAdd": "Manual Add",
+    "manualReduce": "Manual Reduce",
+    "remaining": "Remaining",
+    "statusOverLimit": "Over Limit",
+    "dailyGoalPercent": "{percent}% of Daily Goal",
+    "@dailyGoalPercent": {
+        "placeholders": {
+            "percent": {}
+        }
+    },
+    "chooseIcon": "Choose Icon",
+    "editDrinkIcon": "Edit Drink Icon"
 }

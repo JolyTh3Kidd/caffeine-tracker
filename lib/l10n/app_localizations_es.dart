@@ -105,4 +105,118 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get drinkInstant => 'Instantáneo';
+
+  @override
+  String get hintDrinkName => 'e.g., Latte';
+
+  @override
+  String get hintCaffeine => 'e.g., 95';
+
+  @override
+  String get unitMg => 'mg';
+
+  @override
+  String get saveDrink => 'Guardar Bebida';
+
+  @override
+  String get filterByDate => 'Filtrar por Fecha';
+
+  @override
+  String filteredLabel(Object label) {
+    return 'Filtrado: $label';
+  }
+
+  @override
+  String totalLabel(Object amount) {
+    return 'Total: $amount mg';
+  }
+
+  @override
+  String get clearFilter => 'Limpiar Filtro';
+
+  @override
+  String get noRecordsFound => 'No se encontraron registros';
+
+  @override
+  String get tryDifferentDateRange =>
+      'Prueba a seleccionar un intervalo de fechas diferente.';
+
+  @override
+  String overLimit(Object amount) {
+    return 'Por encima del límite por $amount mg';
+  }
+
+  @override
+  String get withinLimit => 'Dentro del límite';
+
+  @override
+  String get noDrinkRecords => 'No hay registros de bebidas';
+
+  @override
+  String get specificDay => 'Día Específico';
+
+  @override
+  String get dateRange => 'Rango de Fecha';
+
+  @override
+  String get specificMonth => 'Mes Específico';
+
+  @override
+  String get selectMonth => 'SELECCIONAR MES (ESCOGE CUALQUIER DIA)';
+
+  @override
+  String get deleteDrinkTitle => 'Eliminar Bebida?';
+
+  @override
+  String deleteDrinkContent(Object drinkName) {
+    return '¿Estás seguro de que quieres eliminar \"$drinkName\"?';
+  }
+
+  @override
+  String confirmAddTitle(Object drinkName) {
+    return 'Añadir $drinkName?';
+  }
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get editDefaultDrink => 'Editar Bebida Predeterminada';
+
+  @override
+  String get invalidCaffeineNumber =>
+      'Por favor ingresa un número válido para la cafeína';
+
+  @override
+  String get errorSavingDrink =>
+      'Error al guardar la bebida. Por favor intenta de nuevo.';
+
+  @override
+  String get deleteDrinkTooltip => 'Eliminar bebida';
+
+  @override
+  String get quickAdd => 'Añadir rápidamente';
+
+  @override
+  String get manualAdd => 'Añadir Manualmente';
+
+  @override
+  String get manualReduce => 'Reducción Manual';
+
+  @override
+  String get remaining => 'Restante';
+
+  @override
+  String get statusOverLimit => 'Por encima del límite';
+
+  @override
+  String dailyGoalPercent(Object percent) {
+    return '$percent% del Objetivo Diario';
+  }
+
+  @override
+  String get chooseIcon => 'Seleccionar icono';
+
+  @override
+  String get editDrinkIcon => 'Editar icono de bebida';
 }

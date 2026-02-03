@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:caffeine_tracker/l10n/app_localizations.dart';
 import '../services/storage_service.dart';
 
 class EditDrinkScreen extends StatefulWidget {
   final String drinkId;
   final String initialName;
   final int initialCaffeine;
+  final String initialIcon;
   final bool isPredefined;
-  final Function() onSave;
+  final VoidCallback onSave;
 
   const EditDrinkScreen({
     super.key,
     required this.drinkId,
     required this.initialName,
     required this.initialCaffeine,
+    required this.initialIcon,
     required this.isPredefined,
     required this.onSave,
   });
@@ -29,12 +32,43 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late String _selectedIcon;
+
+  final List<String> _availableIcons = [
+    'local_cafe',
+    'coffee',
+    'emoji_food_beverage',
+    'coffee_maker',
+    'bolt',
+    'icecream',
+  ];
+
+  IconData _getIconData(String name) {
+    switch (name) {
+      case 'coffee':
+        return Icons.coffee;
+      case 'emoji_food_beverage':
+        return Icons.emoji_food_beverage;
+      case 'coffee_maker':
+        return Icons.coffee_maker;
+      case 'bolt':
+        return Icons.bolt;
+      case 'icecream':
+        return Icons.icecream;
+      case 'local_cafe':
+      default:
+        return Icons.local_cafe;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.initialName);
-    _caffeineController = TextEditingController(text: widget.initialCaffeine.toString());
+    _caffeineController =
+        TextEditingController(text: widget.initialCaffeine.toString());
+
+    _selectedIcon = widget.initialIcon;
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
@@ -45,8 +79,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
-        .animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
     );
 
@@ -69,10 +103,11 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     if (name.isEmpty || caffeineStr.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please fill all fields'),
+          content: Text(AppLocalizations.of(context)!.fillAllFields),
           backgroundColor: Colors.red[600],
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       return;
@@ -83,10 +118,12 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     if (caffeine == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please enter a valid number for caffeine'),
+          // invalidCaffeineNumber
+          content: Text(AppLocalizations.of(context)!.invalidCaffeineNumber),
           backgroundColor: Colors.red[600],
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       return;
@@ -100,21 +137,24 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
           widget.drinkId,
           name,
           caffeine,
+          _selectedIcon,
         );
         // Also restore if it was deleted
         StorageService.restorePredefinedDrink(widget.drinkId);
       } else {
         // Safe Custom Drink Update
         final customDrinks = StorageService.customDrinksList;
-        
+
         // Ensure we can find the drink before trying to update it
-        final drinkIndex = customDrinks.indexWhere((d) => d.id == widget.drinkId);
-        
+        final drinkIndex =
+            customDrinks.indexWhere((d) => d.id == widget.drinkId);
+
         if (drinkIndex != -1) {
           final existingDrink = customDrinks[drinkIndex];
           final updatedDrink = existingDrink.copyWith(
             name: name,
             caffeine: caffeine,
+            icon: _selectedIcon,
           );
           StorageService.updateCustomDrink(updatedDrink);
         } else {
@@ -127,7 +167,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Error saving drink. Please try again.'),
+          // errorSavingDrink
+          content: Text(AppLocalizations.of(context)!.errorSavingDrink),
           backgroundColor: Colors.red[600],
         ),
       );
@@ -138,12 +179,16 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Drink?'),
-        content: Text('Are you sure you want to delete "${widget.initialName}"?'),
+        // deleteDrinkTitle
+        title: Text(AppLocalizations.of(context)!.deleteDrinkTitle),
+        // deleteDrinkContent
+        content: Text(AppLocalizations.of(context)!
+            .deleteDrinkContent(widget.initialName)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            // cancel
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -158,7 +203,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
               Navigator.pop(context); // Close screen
             },
             child: Text(
-              'Delete',
+              // delete
+              AppLocalizations.of(context)!.delete,
               style: TextStyle(color: Colors.red[600]),
             ),
           ),
@@ -174,7 +220,9 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(widget.isPredefined ? 'Edit Default Drink' : 'Edit Drink'),
+        title: Text(widget.isPredefined
+            ? AppLocalizations.of(context)!.editDefaultDrink
+            : AppLocalizations.of(context)!.editDrink),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -182,7 +230,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
           IconButton(
             icon: Icon(Icons.delete, color: Colors.red[600]),
             onPressed: _deleteDrink,
-            tooltip: 'Delete drink',
+            // deleteDrinkTooltip
+            tooltip: AppLocalizations.of(context)!.deleteDrinkTooltip,
           ),
         ],
       ),
@@ -196,32 +245,90 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
               child: Column(
                 children: [
                   // Decorative icon
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.brown[300]!,
-                          Colors.brown[600]!,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  Hero(
+                    tag: 'drink_icon_${widget.drinkId}',
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.7),
+                            Theme.of(context).primaryColor,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Icon(
+                        _getIconData(_selectedIcon),
+                        color: Colors.white,
+                        size: 40,
                       ),
                     ),
-                    child: const Icon(
-                      Icons.local_cafe,
-                      color: Colors.white,
-                      size: 40,
+                  ),
+                  const SizedBox(height: 32),
+                  // Icon Selection
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4, bottom: 12),
+                      child: Text(
+                        AppLocalizations.of(context)!.chooseIcon,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                     ),
+                  ),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: _availableIcons.map((iconName) {
+                      final isSelected = _selectedIcon == iconName;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIcon = iconName;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                          ),
+                          child: Icon(
+                            _getIconData(iconName),
+                            color: isSelected
+                                ? Colors.white
+                                : Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(height: 32),
                   // Drink name field
                   _buildInputField(
                     controller: _nameController,
-                    label: 'Drink Name',
-                    hint: 'e.g., Iced Latte',
+                    // drinkName
+                    label: AppLocalizations.of(context)!.drinkName,
+                    // hintDrinkName
+                    hint: AppLocalizations.of(context)!.hintDrinkName,
                     icon: Icons.local_cafe,
                     isDark: isDark,
                   ),
@@ -229,12 +336,15 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
                   // Caffeine input field
                   _buildInputField(
                     controller: _caffeineController,
-                    label: 'Caffeine Content',
-                    hint: 'e.g., 95',
+                    // caffeineContent
+                    label: AppLocalizations.of(context)!.caffeineContent,
+                    // hintCaffeine
+                    hint: AppLocalizations.of(context)!.hintCaffeine,
                     icon: Icons.bolt,
                     keyboardType: TextInputType.number,
                     isDark: isDark,
-                    suffix: 'mg',
+                    // unitMg
+                    suffix: AppLocalizations.of(context)!.unitMg,
                   ),
                   const SizedBox(height: 36),
                   // Save button
@@ -245,15 +355,19 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
                         borderRadius: BorderRadius.circular(14),
                         gradient: LinearGradient(
                           colors: [
-                            Colors.brown[500]!,
-                            Colors.brown[700]!,
+                            Theme.of(context).primaryColor,
+                            Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.8),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.brown.withOpacity(0.3),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
                           ),
@@ -270,14 +384,15 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.check_circle, size: 20),
-                            SizedBox(width: 8),
+                            const Icon(Icons.check_circle, size: 20),
+                            const SizedBox(width: 8),
                             Text(
-                              'Save Changes',
-                              style: TextStyle(
+                              // save
+                              AppLocalizations.of(context)!.save,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -296,7 +411,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         side: BorderSide(
-                          color: Colors.grey[400]!,
+                          color: Theme.of(context).dividerColor,
                           width: 1.5,
                         ),
                         shape: RoundedRectangleBorder(
@@ -304,7 +419,8 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
                         ),
                       ),
                       child: Text(
-                        'Cancel',
+                        // cancel
+                        AppLocalizations.of(context)!.cancel,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -336,7 +452,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : Colors.black).withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -348,11 +464,9 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
         inputFormatters: keyboardType == TextInputType.number
             ? [FilteringTextInputFormatter.digitsOnly]
             : [],
-        style: TextStyle(
-          fontSize: 16,
-          color: isDark ? Colors.white : Colors.black,
-          fontWeight: FontWeight.w500,
-        ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -362,7 +476,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
           ),
           prefixIcon: Icon(
             icon,
-            color: Colors.brown[600],
+            color: Theme.of(context).primaryColor,
             size: 22,
           ),
           suffixText: suffix,
@@ -372,13 +486,10 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
             fontSize: 14,
           ),
           filled: true,
-          fillColor: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(
-              color: Colors.grey[300]!,
-              width: 1.5,
-            ),
+            borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
@@ -390,7 +501,7 @@ class _EditDrinkScreenState extends State<EditDrinkScreen>
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-              color: Colors.brown[600]!,
+              color: Theme.of(context).primaryColor,
               width: 2,
             ),
           ),

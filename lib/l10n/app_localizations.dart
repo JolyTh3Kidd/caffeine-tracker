@@ -295,6 +295,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Instant'**
   String get drinkInstant;
+
+  /// No description provided for @hintDrinkName.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Iced Latte'**
+  String get hintDrinkName;
+
+  /// No description provided for @hintCaffeine.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 95'**
+  String get hintCaffeine;
+
+  /// No description provided for @unitMg.
+  ///
+  /// In en, this message translates to:
+  /// **'mg'**
+  String get unitMg;
+
+  /// No description provided for @saveDrink.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Drink'**
+  String get saveDrink;
+
+  /// No description provided for @filterByDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Date'**
+  String get filterByDate;
+
+  /// No description provided for @filteredLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Filtered: {label}'**
+  String filteredLabel(Object label);
+
+  /// No description provided for @totalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {amount} mg'**
+  String totalLabel(Object amount);
+
+  /// No description provided for @clearFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filter'**
+  String get clearFilter;
+
+  /// No description provided for @noRecordsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No records found'**
+  String get noRecordsFound;
+
+  /// No description provided for @tryDifferentDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Try selecting a different date range'**
+  String get tryDifferentDateRange;
+
+  /// No description provided for @overLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Over by {amount} mg'**
+  String overLimit(Object amount);
+
+  /// No description provided for @withinLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Within limit'**
+  String get withinLimit;
+
+  /// No description provided for @noDrinkRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'No drink records'**
+  String get noDrinkRecords;
+
+  /// No description provided for @specificDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific Day'**
+  String get specificDay;
+
+  /// No description provided for @dateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get dateRange;
+
+  /// No description provided for @specificMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Specific Month'**
+  String get specificMonth;
+
+  /// No description provided for @selectMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'SELECT MONTH (PICK ANY DAY)'**
+  String get selectMonth;
+
+  /// No description provided for @deleteDrinkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Drink?'**
+  String get deleteDrinkTitle;
+
+  /// No description provided for @deleteDrinkContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{drinkName}\"?'**
+  String deleteDrinkContent(Object drinkName);
+
+  /// No description provided for @confirmAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {drinkName}?'**
+  String confirmAddTitle(Object drinkName);
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @editDefaultDrink.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Default Drink'**
+  String get editDefaultDrink;
+
+  /// No description provided for @invalidCaffeineNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number for caffeine'**
+  String get invalidCaffeineNumber;
+
+  /// No description provided for @errorSavingDrink.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving drink. Please try again.'**
+  String get errorSavingDrink;
+
+  /// No description provided for @deleteDrinkTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete drink'**
+  String get deleteDrinkTooltip;
+
+  /// No description provided for @quickAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Add'**
+  String get quickAdd;
+
+  /// No description provided for @manualAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Add'**
+  String get manualAdd;
+
+  /// No description provided for @manualReduce.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Reduce'**
+  String get manualReduce;
+
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remaining;
+
+  /// No description provided for @statusOverLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Over Limit'**
+  String get statusOverLimit;
+
+  /// No description provided for @dailyGoalPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of Daily Goal'**
+  String dailyGoalPercent(Object percent);
+
+  /// No description provided for @chooseIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Icon'**
+  String get chooseIcon;
+
+  /// No description provided for @editDrinkIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Drink Icon'**
+  String get editDrinkIcon;
 }
 
 class _AppLocalizationsDelegate

@@ -30,5 +30,68 @@
     "drinkLatte": "Latte",
     "drinkAmericano": "Americano",
     "drinkFilter": "Cà phê phin",
-    "drinkInstant": "Cà phê hòa tan"
+    "drinkInstant": "Cà phê hòa tan",
+    "editDefaultDrink": "Chỉnh sửa đồ uống mặc định",
+    "hintDrinkName": "ví dụ: Cà phê đá",
+    "hintCaffeine": "ví dụ: 95",
+    "unitMg": "mg",
+    "saveDrink": "Lưu",
+    "filterByDate": "Lọc theo ngày",
+    "filteredLabel": "Lọc: {label}",
+    "@filteredLabel": {
+        "placeholders": {
+            "label": {}
+        }
+    },
+    "totalLabel": "Tổng: {amount} mg",
+    "@totalLabel": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "clearFilter": "Xóa bộ lọc",
+    "noRecordsFound": "Không có lịch sử",
+    "tryDifferentDateRange": "Thử chọn một khoảng thời gian khác",
+    "overLimit": "Vượt quá giới hạn {amount} mg",
+    "@overLimit": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "withinLimit": "Trong giới hạn",
+    "noDrinkRecords": "Không có lịch sử",
+    "specificDay": "Thời gian cụ thể",
+    "dateRange": "Khoảng thời gian",
+    "specificMonth": "Tháng cụ thể",
+    "selectMonth": "CHỌN THÁNG (CHỌN NGÀY BẤT KỲ)",
+    "deleteDrinkTitle": "Xóa đồ uống?",
+    "deleteDrinkContent": "Bạn có chắc chắn muốn xóa không \"{drinkName}\"?",
+    "@deleteDrinkContent": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirmAddTitle": "Thêm {drinkName}?",
+    "@confirmAddTitle": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirm": "Confirm",
+    "invalidCaffeineNumber": "Vui lòng nhập một số hợp lệ cho caffeine",
+    "errorSavingDrink": "Lỗi khi lưu đồ uống. Vui lòng thử lại.",
+    "deleteDrinkTooltip": "Xóa đồ uống",
+    "quickAdd": "Thêm nhanh",
+    "manualAdd": "Thêm thủ công",
+    "manualReduce": "Giảm thủ công",
+    "remaining": "Còn lại",
+    "statusOverLimit": "Vượt quá giới hạn",
+    "dailyGoalPercent": "{percent}% của Mục tiêu hàng ngày",
+    "@dailyGoalPercent": {
+        "placeholders": {
+            "percent": {}
+        }
+    },
+    "chooseIcon": "Chọn Icon",
+    "editDrinkIcon": "Chỉnh sửa Icon"
 }

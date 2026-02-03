@@ -105,4 +105,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drinkInstant => 'Instant';
+
+  @override
+  String get hintDrinkName => 'e.g., Iced Latte';
+
+  @override
+  String get hintCaffeine => 'e.g., 95';
+
+  @override
+  String get unitMg => 'mg';
+
+  @override
+  String get saveDrink => 'Save Drink';
+
+  @override
+  String get filterByDate => 'Filter by Date';
+
+  @override
+  String filteredLabel(Object label) {
+    return 'Filtered: $label';
+  }
+
+  @override
+  String totalLabel(Object amount) {
+    return 'Total: $amount mg';
+  }
+
+  @override
+  String get clearFilter => 'Clear Filter';
+
+  @override
+  String get noRecordsFound => 'No records found';
+
+  @override
+  String get tryDifferentDateRange => 'Try selecting a different date range';
+
+  @override
+  String overLimit(Object amount) {
+    return 'Over by $amount mg';
+  }
+
+  @override
+  String get withinLimit => 'Within limit';
+
+  @override
+  String get noDrinkRecords => 'No drink records';
+
+  @override
+  String get specificDay => 'Specific Day';
+
+  @override
+  String get dateRange => 'Date Range';
+
+  @override
+  String get specificMonth => 'Specific Month';
+
+  @override
+  String get selectMonth => 'SELECT MONTH (PICK ANY DAY)';
+
+  @override
+  String get deleteDrinkTitle => 'Delete Drink?';
+
+  @override
+  String deleteDrinkContent(Object drinkName) {
+    return 'Are you sure you want to delete \"$drinkName\"?';
+  }
+
+  @override
+  String confirmAddTitle(Object drinkName) {
+    return 'Add $drinkName?';
+  }
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get editDefaultDrink => 'Edit Default Drink';
+
+  @override
+  String get invalidCaffeineNumber =>
+      'Please enter a valid number for caffeine';
+
+  @override
+  String get errorSavingDrink => 'Error saving drink. Please try again.';
+
+  @override
+  String get deleteDrinkTooltip => 'Delete drink';
+
+  @override
+  String get quickAdd => 'Quick Add';
+
+  @override
+  String get manualAdd => 'Manual Add';
+
+  @override
+  String get manualReduce => 'Manual Reduce';
+
+  @override
+  String get remaining => 'Remaining';
+
+  @override
+  String get statusOverLimit => 'Over Limit';
+
+  @override
+  String dailyGoalPercent(Object percent) {
+    return '$percent% of Daily Goal';
+  }
+
+  @override
+  String get chooseIcon => 'Choose Icon';
+
+  @override
+  String get editDrinkIcon => 'Edit Drink Icon';
 }

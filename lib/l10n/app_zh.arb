@@ -30,5 +30,68 @@
     "drinkLatte": "拿铁",
     "drinkAmericano": "美式咖啡",
     "drinkFilter": "过滤咖啡",
-    "drinkInstant": "速溶咖啡"
+    "drinkInstant": "速溶咖啡",
+    "editDefaultDrink": "编辑默认饮品",
+    "hintDrinkName": "例如，冰拿铁",
+    "hintCaffeine": "例如，95",
+    "unitMg": "mg",
+    "saveDrink": "保存饮品",
+    "filterByDate": "按日期筛选",
+    "filteredLabel": "筛选: {label}",
+    "@filteredLabel": {
+        "placeholders": {
+            "label": {}
+        }
+    },
+    "totalLabel": "Total: {amount} mg",
+    "@totalLabel": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "clearFilter": "清除筛选",
+    "noRecordsFound": "没有记录",
+    "tryDifferentDateRange": "尝试选择不同的日期范围",
+    "overLimit": "超过 {amount} mg",
+    "@overLimit": {
+        "placeholders": {
+            "amount": {}
+        }
+    },
+    "withinLimit": "在限制内",
+    "noDrinkRecords": "没有饮品记录",
+    "specificDay": "特定日期",
+    "dateRange": "日期范围",
+    "specificMonth": "特定月份",
+    "selectMonth": "选择月份 任选日期",
+    "deleteDrinkTitle": "删除饮品?",
+    "deleteDrinkContent": "您确定要删除吗 \"{drinkName}\"?",
+    "@deleteDrinkContent": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirmAddTitle": "添加 {drinkName}?",
+    "@confirmAddTitle": {
+        "placeholders": {
+            "drinkName": {}
+        }
+    },
+    "confirm": "确认",
+    "invalidCaffeineNumber": "请输入一个有效的咖啡因数字",
+    "errorSavingDrink": "保存饮品时出错。请重试。",
+    "deleteDrinkTooltip": "删除饮品",
+    "quickAdd": "快速添加",
+    "manualAdd": "手动添加",
+    "manualReduce": "手动缩减",
+    "remaining": "剩余",
+    "statusOverLimit": "超过限制",
+    "dailyGoalPercent": "{percent}% 每日目标",
+    "@dailyGoalPercent": {
+        "placeholders": {
+            "percent": {}
+        }
+    },
+    "chooseIcon": "选择图标",
+    "editDrinkIcon": "编辑饮品图标"
 }

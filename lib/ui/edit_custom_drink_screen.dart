@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:caffeine_tracker/l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../models/custom_drink.dart';
 import '../services/storage_service.dart';
@@ -41,8 +42,8 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
-        .animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
     );
 
@@ -61,10 +62,11 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
     if (_nameController.text.isEmpty || _caffeineController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please fill all fields'),
+          content: Text(AppLocalizations.of(context)!.fillAllFields),
           backgroundColor: Colors.red[600],
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
       return;
@@ -87,12 +89,13 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Drink?'),
-        content: Text('Are you sure you want to delete "${widget.drink.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteDrinkTitle),
+        content: Text(AppLocalizations.of(context)!
+            .deleteDrinkContent(widget.drink.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -102,7 +105,7 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
               Navigator.pop(context);
             },
             child: Text(
-              'Delete',
+              AppLocalizations.of(context)!.delete,
               style: TextStyle(color: Colors.red[600]),
             ),
           ),
@@ -118,7 +121,7 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Edit Drink'),
+        title: Text(AppLocalizations.of(context)!.editDrink),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -164,8 +167,8 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
                   // Drink name field
                   _buildInputField(
                     controller: _nameController,
-                    label: 'Drink Name',
-                    hint: 'e.g., Iced Latte',
+                    label: AppLocalizations.of(context)!.drinkName,
+                    hint: AppLocalizations.of(context)!.hintDrinkName,
                     icon: Icons.local_cafe,
                     isDark: isDark,
                   ),
@@ -173,12 +176,12 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
                   // Caffeine input field
                   _buildInputField(
                     controller: _caffeineController,
-                    label: 'Caffeine Content',
-                    hint: 'e.g., 95',
+                    label: AppLocalizations.of(context)!.caffeineContent,
+                    hint: AppLocalizations.of(context)!.hintCaffeine,
                     icon: Icons.bolt,
                     keyboardType: TextInputType.number,
                     isDark: isDark,
-                    suffix: 'mg',
+                    suffix: AppLocalizations.of(context)!.unitMg,
                   ),
                   const SizedBox(height: 36),
                   // Save button
@@ -197,7 +200,7 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.brown.withOpacity(0.3),
+                            color: Colors.brown.withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 6),
                           ),
@@ -214,13 +217,13 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.check_circle, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              'Save Changes',
+                              AppLocalizations.of(context)!.save,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -248,7 +251,7 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
                         ),
                       ),
                       child: Text(
-                        'Cancel',
+                        AppLocalizations.of(context)!.cancel,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -280,7 +283,8 @@ class _EditCustomDrinkScreenState extends State<EditCustomDrinkScreen>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : Colors.black).withOpacity(0.08),
+            color:
+                (isDark ? Colors.black : Colors.black).withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
