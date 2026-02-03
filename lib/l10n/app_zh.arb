@@ -24,5 +24,11 @@
     "addCustom": "添加自定义饮品",
     "systemTheme": "系统主题",
     "lightTheme": "浅色主题",
-    "darkTheme": "深色主题"
+    "darkTheme": "深色主题",
+    "drinkEspresso": "浓缩咖啡",
+    "drinkCappuccino": "卡布奇诺",
+    "drinkLatte": "拿铁",
+    "drinkAmericano": "美式咖啡",
+    "drinkFilter": "过滤咖啡",
+    "drinkInstant": "速溶咖啡"
 }

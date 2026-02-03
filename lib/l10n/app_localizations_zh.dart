@@ -87,4 +87,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get darkTheme => '深色主题';
+
+  @override
+  String get drinkEspresso => '浓缩咖啡';
+
+  @override
+  String get drinkCappuccino => '卡布奇诺';
+
+  @override
+  String get drinkLatte => '拿铁';
+
+  @override
+  String get drinkAmericano => '美式咖啡';
+
+  @override
+  String get drinkFilter => '过滤咖啡';
+
+  @override
+  String get drinkInstant => '速溶咖啡';
 }

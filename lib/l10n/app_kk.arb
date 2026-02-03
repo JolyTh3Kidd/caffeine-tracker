@@ -24,5 +24,11 @@
     "addCustom": "Жеке сусын қосу",
     "systemTheme": "Жүйе Түсі",
     "lightTheme": "Жарық Түсі",
-    "darkTheme": "Қара Түсі"
+    "darkTheme": "Қара Түсі",
+    "drinkEspresso": "Эспрессо",
+    "drinkCappuccino": "Капучино",
+    "drinkLatte": "Латте",
+    "drinkAmericano": "Американо",
+    "drinkFilter": "Сүзгі кофе",
+    "drinkInstant": "Ерігіш кофе"
 }

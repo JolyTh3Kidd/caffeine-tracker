@@ -87,4 +87,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get darkTheme => 'Dark Theme';
+
+  @override
+  String get drinkEspresso => 'Espresso';
+
+  @override
+  String get drinkCappuccino => 'Cappuccino';
+
+  @override
+  String get drinkLatte => 'Latte';
+
+  @override
+  String get drinkAmericano => 'Americano';
+
+  @override
+  String get drinkFilter => 'Filter';
+
+  @override
+  String get drinkInstant => 'Instant';
 }

@@ -30,5 +30,11 @@
     "addCustom": "Add Custom Drink",
     "systemTheme": "System Theme",
     "lightTheme": "Light Theme",
-    "darkTheme": "Dark Theme"
+    "darkTheme": "Dark Theme",
+    "drinkEspresso": "Espresso",
+    "drinkCappuccino": "Cappuccino",
+    "drinkLatte": "Latte",
+    "drinkAmericano": "Americano",
+    "drinkFilter": "Filter",
+    "drinkInstant": "Instant"
 }

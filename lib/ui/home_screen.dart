@@ -6,6 +6,7 @@ import '../widgets/drink_card.dart';
 import '../ui/caffeine_overview.dart';
 import '../l10n/app_localizations.dart';
 import '../models/custom_drink.dart';
+import '../models/predefined_drink.dart';
 import 'add_custom_drink_screen.dart';
 import 'edit_drink_screen.dart';
 import 'history_screen.dart';
@@ -13,7 +14,8 @@ import 'history_screen.dart';
 class HomeScreen extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
   final Function(Locale) onLocaleChanged;
-  const HomeScreen({super.key, required this.onThemeChanged, required this.onLocaleChanged});
+  const HomeScreen(
+      {super.key, required this.onThemeChanged, required this.onLocaleChanged});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,11 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int total = StorageService.todayCaffeine;
   int limit = StorageService.caffeineLimit;
   late List<CustomDrink> customDrinks;
+  late List<PredefinedDrink> predefinedDrinks;
 
   @override
   void initState() {
     super.initState();
     customDrinks = StorageService.customDrinksList;
+    predefinedDrinks = StorageService.getPredefinedDrinks();
   }
 
   void _add(int mg, {String drinkName = 'Unknown'}) {
@@ -136,36 +140,77 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            CaffeineOverviewCard(total: total, limit: limit),
+            CaffeineOverviewCard(
+              total: total,
+              limit: limit,
+              onManualAdjustment: (amount) {
+                HapticFeedback.lightImpact();
+                setState(() {
+                  StorageService.updateTodayTotal(amount);
+                  total = StorageService.todayCaffeine;
+                });
+              },
+            ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 16),
                 children: [
-                  ...DrinkCard.predefined(
-                    _add,
-                    (id, name, caffeine) {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => EditDrinkScreen(
-                            drinkId: id,
-                            initialName: name,
-                            initialCaffeine: caffeine,
-                            isPredefined: true,
-                            onSave: () {
-                              setState(() {});
-                            },
-                          ),
-                          transitionsBuilder: (_, animation, __, child) {
-                            return SlideTransition(
-                              position: Tween(
-                                begin: const Offset(0, 1),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
-                            );
-                          },
-                        ),
+                  ...predefinedDrinks.map(
+                    (drink) {
+                      String getName() {
+                        if (drink.isModified) return drink.name;
+                        switch (drink.id) {
+                          case 'espresso':
+                            return l?.drinkEspresso ?? drink.name;
+                          case 'cappuccino':
+                            return l?.drinkCappuccino ?? drink.name;
+                          case 'latte':
+                            return l?.drinkLatte ?? drink.name;
+                          case 'americano':
+                            return l?.drinkAmericano ?? drink.name;
+                          case 'filter':
+                            return l?.drinkFilter ?? drink.name;
+                          case 'instant':
+                            return l?.drinkInstant ?? drink.name;
+                          default:
+                            return drink.name;
+                        }
+                      }
+
+                      final name = getName();
+
+                      return DrinkCard(
+                        name: name,
+                        caffeine: drink.caffeine,
+                        onAdd: () => _add(drink.caffeine, drinkName: name),
+                        onEdit: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => EditDrinkScreen(
+                                drinkId: drink.id,
+                                initialName: name,
+                                initialCaffeine: drink.caffeine,
+                                isPredefined: true,
+                                onSave: () {
+                                  setState(() {
+                                    predefinedDrinks =
+                                        StorageService.getPredefinedDrinks();
+                                  });
+                                },
+                              ),
+                              transitionsBuilder: (_, animation, __, child) {
+                                return SlideTransition(
+                                  position: Tween(
+                                    begin: const Offset(0, 1),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -218,7 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _openAddCustomDrink,
                       icon: const Icon(Icons.add),
-                      label: Text(AppLocalizations.of(context)?.addCustom ?? 'Add Custom Drink'),
+                      label: Text(AppLocalizations.of(context)?.addCustom ??
+                          'Add Custom Drink'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(

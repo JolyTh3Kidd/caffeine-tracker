@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CaffeineOverviewCard extends StatelessWidget {
   final int total;
   final int limit;
+  final Function(int)? onManualAdjustment;
 
   const CaffeineOverviewCard({
     super.key,
     required this.total,
     required this.limit,
+    this.onManualAdjustment,
   });
 
   @override
@@ -61,18 +63,21 @@ class CaffeineOverviewCard extends StatelessWidget {
                     children: [
                       Text(
                         '$total',
-                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.displaySmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
                       ),
                       Text(
                         'mg',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: isDark
-                              ? Colors.grey[400]
-                              : Colors.grey[600],
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.copyWith(
+                              color:
+                                  isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),
@@ -92,21 +97,69 @@ class CaffeineOverviewCard extends StatelessWidget {
                 Text(
                   'Daily Limit',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  ),
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$limit mg',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black87,
-                  ),
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          if (onManualAdjustment != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildAdjustButton(context, -10, isDark),
+                const SizedBox(width: 16),
+                _buildAdjustButton(context, 10, isDark),
+              ],
+            ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAdjustButton(BuildContext context, int amount, bool isDark) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onManualAdjustment!(amount),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark ? const Color(0xFF333333) : const Color(0xFFE0E0E0),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                amount > 0 ? Icons.add : Icons.remove,
+                size: 16,
+                color: isDark ? Colors.grey[300] : Colors.grey[700],
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '10 mg',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.grey[300] : Colors.grey[700],
+                    ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

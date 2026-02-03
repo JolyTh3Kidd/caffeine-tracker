@@ -14,29 +14,6 @@ class DrinkCard extends StatelessWidget {
     this.onEdit,
   });
 
-  static List<Widget> predefined(
-    Function(int, {String drinkName}) onAdd,
-    Function(String, String, int)? onEdit,
-  ) {
-    final drinks = [
-      ('espresso', 'Espresso', 63),
-      ('cappuccino', 'Cappuccino', 75),
-      ('latte', 'Latte', 75),
-      ('americano', 'Americano', 95),
-      ('filter', 'Filter', 120),
-      ('instant', 'Instant', 60),
-    ];
-
-    return drinks.map((drink) {
-      return DrinkCard(
-        name: drink.$2,
-        caffeine: drink.$3,
-        onAdd: () => onAdd(drink.$3, drinkName: drink.$2),
-        onEdit: onEdit != null ? () => onEdit(drink.$1, drink.$2, drink.$3) : null,
-      );
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -52,9 +29,8 @@ class DrinkCard extends StatelessWidget {
               color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: isDark
-                    ? const Color(0xFF2A2A2A)
-                    : const Color(0xFFEEEEEE),
+                color:
+                    isDark ? const Color(0xFF2A2A2A) : const Color(0xFFEEEEEE),
                 width: 1,
               ),
             ),
@@ -68,18 +44,17 @@ class DrinkCard extends StatelessWidget {
                       Text(
                         name,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         '$caffeine mg',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: isDark
-                              ? Colors.grey[400]
-                              : Colors.grey[600],
-                        ),
+                              color:
+                                  isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),

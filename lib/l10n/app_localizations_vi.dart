@@ -87,4 +87,22 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get darkTheme => 'Chủ đề tối';
+
+  @override
+  String get drinkEspresso => 'Espresso';
+
+  @override
+  String get drinkCappuccino => 'Cappuccino';
+
+  @override
+  String get drinkLatte => 'Latte';
+
+  @override
+  String get drinkAmericano => 'Americano';
+
+  @override
+  String get drinkFilter => 'Cà phê phin';
+
+  @override
+  String get drinkInstant => 'Cà phê hòa tan';
 }

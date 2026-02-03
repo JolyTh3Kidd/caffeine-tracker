@@ -24,5 +24,11 @@
     "addCustom": "Thêm đồ uống tùy chỉnh",
     "systemTheme": "Giao Diện Hệ Thống",
     "lightTheme": "Chủ đề sáng",
-    "darkTheme": "Chủ đề tối"
+    "darkTheme": "Chủ đề tối",
+    "drinkEspresso": "Espresso",
+    "drinkCappuccino": "Cappuccino",
+    "drinkLatte": "Latte",
+    "drinkAmericano": "Americano",
+    "drinkFilter": "Cà phê phin",
+    "drinkInstant": "Cà phê hòa tan"
 }

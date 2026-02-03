@@ -259,6 +259,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark Theme'**
   String get darkTheme;
+
+  /// No description provided for @drinkEspresso.
+  ///
+  /// In en, this message translates to:
+  /// **'Espresso'**
+  String get drinkEspresso;
+
+  /// No description provided for @drinkCappuccino.
+  ///
+  /// In en, this message translates to:
+  /// **'Cappuccino'**
+  String get drinkCappuccino;
+
+  /// No description provided for @drinkLatte.
+  ///
+  /// In en, this message translates to:
+  /// **'Latte'**
+  String get drinkLatte;
+
+  /// No description provided for @drinkAmericano.
+  ///
+  /// In en, this message translates to:
+  /// **'Americano'**
+  String get drinkAmericano;
+
+  /// No description provided for @drinkFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get drinkFilter;
+
+  /// No description provided for @drinkInstant.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant'**
+  String get drinkInstant;
 }
 
 class _AppLocalizationsDelegate

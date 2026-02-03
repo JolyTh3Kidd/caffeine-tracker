@@ -87,4 +87,22 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get darkTheme => 'Қара Түсі';
+
+  @override
+  String get drinkEspresso => 'Эспрессо';
+
+  @override
+  String get drinkCappuccino => 'Капучино';
+
+  @override
+  String get drinkLatte => 'Латте';
+
+  @override
+  String get drinkAmericano => 'Американо';
+
+  @override
+  String get drinkFilter => 'Сүзгі кофе';
+
+  @override
+  String get drinkInstant => 'Ерігіш кофе';
 }

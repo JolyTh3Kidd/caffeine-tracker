@@ -29,10 +29,10 @@ class StorageService {
   static void addCaffeine(int mg, {String drinkName = 'Unknown'}) {
     final key = _getTodayKey();
     final now = DateTime.now();
-    
+
     // Add to total
     _prefs.setInt(key, todayCaffeine + mg);
-    
+
     // Add drink entry
     final entry = DrinkEntry(name: drinkName, caffeine: mg, timestamp: now);
     final entriesKey = _getDrinkEntriesKey(now);
@@ -42,30 +42,38 @@ class StorageService {
   }
 
   // --- NEW METHOD START ---
-  static Future<void> deleteDrink(DateTime date, DrinkEntry entryToDelete) async {
+  static Future<void> deleteDrink(
+      DateTime date, DrinkEntry entryToDelete) async {
     final entriesKey = _getDrinkEntriesKey(date);
     final rawList = _prefs.getStringList(entriesKey) ?? [];
-    
+
     // Convert to objects
     final entries = rawList.map((e) => DrinkEntry.fromJsonString(e)).toList();
-    
+
     // Remove the specific entry (matching by timestamp ensures uniqueness)
-    entries.removeWhere((e) => e.timestamp.isAtSameMomentAs(entryToDelete.timestamp));
-    
+    entries.removeWhere(
+        (e) => e.timestamp.isAtSameMomentAs(entryToDelete.timestamp));
+
     // Save updated list
     await _prefs.setStringList(
-      entriesKey, 
-      entries.map((e) => e.toJsonString()).toList()
-    );
+        entriesKey, entries.map((e) => e.toJsonString()).toList());
 
     // Recalculate total for that day
     final newTotal = entries.fold<int>(0, (sum, e) => sum + e.caffeine);
-    
+
     // Update total key
     final totalKey = 'caffeine_${date.year}_${date.month}_${date.day}';
     await _prefs.setInt(totalKey, newTotal);
   }
   // --- NEW METHOD END ---
+  // --- NEW METHOD END ---
+
+  static void updateTodayTotal(int amount) {
+    final key = _getTodayKey();
+    final newTotal = todayCaffeine + amount;
+    // Don't allow negative total
+    _prefs.setInt(key, newTotal < 0 ? 0 : newTotal);
+  }
 
   static void resetDay() {
     final key = _getTodayKey();
@@ -76,7 +84,7 @@ class StorageService {
   static Map<String, int> getCaffeineHistory() {
     final history = <String, int>{};
     final allKeys = _prefs.getKeys();
-    
+
     for (final key in allKeys) {
       if (key.startsWith('caffeine_')) {
         final value = _prefs.getInt(key);
@@ -127,7 +135,8 @@ class StorageService {
   static List<custom.CustomDrink> get customDrinksList {
     final raw = _prefs.getStringList('customDrinks') ?? [];
     return raw
-        .map((e) => custom.CustomDrink.fromJson(jsonDecode(e) as Map<String, dynamic>))
+        .map((e) =>
+            custom.CustomDrink.fromJson(jsonDecode(e) as Map<String, dynamic>))
         .toList();
   }
 
@@ -178,13 +187,16 @@ class StorageService {
 
   // Get all predefined drinks (with modifications applied)
   static List<PredefinedDrink> getPredefinedDrinks() {
-    return PredefinedDrink.defaults.map((drink) {
+    return PredefinedDrink.defaults
+        .where((d) => !isPredefinedDrinkDeleted(d.id))
+        .map((drink) {
       final modified = getModifiedPredefinedDrink(drink.id);
       if (modified.isNotEmpty) {
         return PredefinedDrink(
           id: drink.id,
           name: modified['name'] as String,
           caffeine: modified['caffeine'] as int,
+          isModified: true,
         );
       }
       return drink;
