@@ -5,8 +5,7 @@ import '../services/storage_service.dart';
 const int dailyCaffeineLimit = 400;
 
 /// Riverpod provider
-final caffeineProvider =
-    StateNotifierProvider<CaffeineNotifier, CaffeineState>(
+final caffeineProvider = StateNotifierProvider<CaffeineNotifier, CaffeineState>(
   (ref) => CaffeineNotifier(),
 );
 
@@ -39,16 +38,15 @@ class CaffeineNotifier extends StateNotifier<CaffeineState> {
       : super(
           CaffeineState(
             totalMg: StorageService.todayCaffeine,
-            isLimitExceeded:
-                StorageService.todayCaffeine > dailyCaffeineLimit,
+            isLimitExceeded: StorageService.todayCaffeine > dailyCaffeineLimit,
           ),
         );
 
   /// Add caffeine (mg)
-  void addCaffeine(int mg) {
+  Future<void> addCaffeine(int mg) async {
     final newTotal = state.totalMg + mg;
 
-    StorageService.addCaffeine(mg);
+    await StorageService.addCaffeine(mg);
 
     state = state.copyWith(
       totalMg: newTotal,
@@ -57,8 +55,8 @@ class CaffeineNotifier extends StateNotifier<CaffeineState> {
   }
 
   /// Reset daily intake
-  void resetDay() {
-    StorageService.resetDay();
+  Future<void> resetDay() async {
+    await StorageService.resetDay();
 
     state = const CaffeineState(
       totalMg: 0,

@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    namespace = "com.example.caffeine_tracker"
+    namespace = "com.jolyth3kidd.caffeine_tracker"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

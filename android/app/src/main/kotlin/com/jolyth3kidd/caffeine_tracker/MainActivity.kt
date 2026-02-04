@@ -1,4 +1,4 @@
-package com.example.caffeine_tracker
+package com.jolyth3kidd.caffeine_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 

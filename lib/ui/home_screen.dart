@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/storage_service.dart';
+import '../services/widget_service.dart';
 import '../widgets/drink_card.dart';
 import '../ui/caffeine_overview.dart';
 import '../l10n/app_localizations.dart';
@@ -40,9 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _dailyLimit = StorageService.caffeineLimit;
   }
 
-  void _addDrink(DrinkEntry entry) {
+  Future<void> _addDrink(DrinkEntry entry) async {
     HapticFeedback.mediumImpact();
-    StorageService.addCaffeine(entry.caffeine, drinkName: entry.name);
+    await StorageService.addCaffeine(entry.caffeine, drinkName: entry.name);
     setState(() {
       _refreshData();
     });
@@ -154,6 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text(AppLocalizations.of(context)!.systemTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.system);
+                  StorageService.setThemeMode('system');
+                  final brightness = MediaQuery.of(context).platformBrightness;
+                  WidgetService.updateWidget(
+                      isDarkMode: brightness == Brightness.dark);
                   Navigator.pop(context);
                 },
               ),
@@ -161,6 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text(AppLocalizations.of(context)!.lightTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.light);
+                  StorageService.setThemeMode('light');
+                  WidgetService.updateWidget(isDarkMode: false);
                   Navigator.pop(context);
                 },
               ),
@@ -168,6 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text(AppLocalizations.of(context)!.darkTheme),
                 onTap: () {
                   widget.onThemeChanged(ThemeMode.dark);
+                  StorageService.setThemeMode('dark');
+                  WidgetService.updateWidget(isDarkMode: true);
                   Navigator.pop(context);
                 },
               ),
@@ -237,7 +246,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const HistoryScreen(),
+                      builder: (_) => HistoryScreen(
+                        onHistoryChanged: () {
+                          setState(() {
+                            _refreshData();
+                          });
+                        },
+                      ),
                     ),
                   );
                 },

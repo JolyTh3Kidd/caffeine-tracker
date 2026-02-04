@@ -2,13 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'services/storage_service.dart';
+import 'services/widget_service.dart';
 import 'ui/home_screen.dart';
 import 'l10n/app_localizations.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await StorageService.init();
-  runApp(const CaffeineTrackerApp());
+  try {
+    await StorageService.init();
+    // Start critical app immediately
+    runApp(const CaffeineTrackerApp());
+
+    // Defer non-critical initialization to next tick
+    Future.microtask(() async {
+      try {
+        await WidgetService.initializeBackground();
+        await WidgetService.updateWidget();
+        await _setHighRefreshRate();
+      } catch (e) {
+        debugPrint('Deferred initialization error: $e');
+      }
+    });
+  } catch (e) {
+    debugPrint('Initialization error: $e');
+    runApp(const CaffeineTrackerApp()); // Fallback to run app anyway
+  }
+}
+
+Future<void> _setHighRefreshRate() async {
+  try {
+    await FlutterDisplayMode.setHighRefreshRate();
+  } catch (e) {
+    debugPrint('High refresh rate error: $e');
+  }
 }
 
 class CaffeineTrackerApp extends StatefulWidget {
@@ -18,9 +45,37 @@ class CaffeineTrackerApp extends StatefulWidget {
   State<CaffeineTrackerApp> createState() => _CaffeineTrackerAppState();
 }
 
-class _CaffeineTrackerAppState extends State<CaffeineTrackerApp> {
-  ThemeMode _themeMode = ThemeMode.dark; // Default to Dark
+class _CaffeineTrackerAppState extends State<CaffeineTrackerApp>
+    with WidgetsBindingObserver {
+  ThemeMode _themeMode = StorageService.themeMode == 'light'
+      ? ThemeMode.light
+      : StorageService.themeMode == 'system'
+          ? ThemeMode.system
+          : ThemeMode.dark;
   Locale? _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint('App lifecycle state changed to: $state');
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.inactive) {
+      debugPrint('Triggering widget update on background/inactive');
+      WidgetService.updateWidget();
+    }
+  }
 
   // Define Light Theme
   ThemeData get _lightTheme {

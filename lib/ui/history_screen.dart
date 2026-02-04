@@ -5,7 +5,8 @@ import '../services/storage_service.dart';
 import '../models/drink_entry.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  final VoidCallback? onHistoryChanged;
+  const HistoryScreen({super.key, this.onHistoryChanged});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -181,6 +182,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     if (confirmed == true) {
       await StorageService.deleteDrink(date, entry);
       _loadHistory();
+      if (widget.onHistoryChanged != null) {
+        widget.onHistoryChanged!();
+      }
     }
   }
 
